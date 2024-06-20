@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+      <OutputType>Library</OutputType>
+      <TargetFramework>net4.6.2</TargetFramework>
+      <UseWPF>true</UseWPF>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+          <DefineConstants>DEBUG;NET462;TRACE</DefineConstants>
+          <DebugType>portable</DebugType>
+          <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+          <DebugType>portable</DebugType>
+          <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+      <ApplicationDefinition Remove="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+      <PackageReference Include="PlayniteSDK" Version="6.11.0" />
+      <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+  </ItemGroup>
+  <ItemGroup>
+      <None Include="extension.yaml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+      <None Include="Localization/*.*">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+  </ItemGroup>
+  <ItemGroup>
+      <None Include="icon.png">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+  </ItemGroup>
+</Project>
