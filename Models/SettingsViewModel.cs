@@ -9,23 +9,36 @@ using System.Windows.Controls;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using ThemeOptions.Views;
 
 
 namespace ThemeOptions.Models
 {
     using ThemesSelectedPresets = Dictionary<string, List<string>>;
+    using ThemesSettings = Dictionary<string, VariablesValues>;
+
+    public static class DictionaryExtension
+    {
+        static public TValue Get<TKey,TValue>(this Dictionary<TKey,TValue>dict, TKey key, TValue def = default)
+        {
+            return dict != null && dict.ContainsKey(key) ? dict[key] : def;
+        }
+    }
 
     public class Settings : ObservableObject
     {
         private ThemesSelectedPresets selectedPresets = new ThemesSelectedPresets();
 
-        public ThemesSelectedPresets SelectedPresets { get => selectedPresets; set => SetValue(ref selectedPresets, value); }
+        private ThemesSettings userSettings = new ThemesSettings();
+
+        public ThemesSelectedPresets SelectedPresets { get => selectedPresets; }
+
+        public ThemesSettings UserSettings { get => userSettings; }
     }
 
     public class SettingsViewModel : ObservableObject, ISettings, INotifyPropertyChanged
     {
         private readonly ThemeOptions plugin;
-
         public Theme SelectedTheme { get; set; }
 
         public List<Theme> CustomizableThemes { get; set; }
@@ -62,7 +75,22 @@ namespace ThemeOptions.Models
                 OnPropertyChanged();
             }
         }
-        public List<string> ThemePresets(string themeId) => settings.SelectedPresets[themeId];
+        public List<string> ThemePresets(string themeId) => settings.SelectedPresets.Get(themeId, new List<string>());
+        public VariablesValues ThemeSettings(string themeId)
+        {
+            Theme theme = Theme.FromId(themeId);
+            if (theme == null) return new VariablesValues();
+            Variables themeSettings = Theme.FromId(themeId)?.Options?.Variables ?? new Variables();
+            VariablesValues userSettings = settings.UserSettings.Get(themeId, new VariablesValues());
+            VariablesValues filtered = new VariablesValues(userSettings.Where(
+                s => s.Value.Value != null
+                  && s.Value.Type == themeSettings.Get(s.Key)?.Type
+                  && s.Value.Value != themeSettings.Get(s.Key)?.Default)
+            );
+
+            var result = theme.Options.Presets.GetConstants(ThemePresets(themeId));
+            return result.Merge(filtered);
+        }
 
         public SettingsViewModel(ThemeOptions plugin)
         {
@@ -92,12 +120,12 @@ namespace ThemeOptions.Models
         {
             CustomizableThemes = Theme.EnumThemes().Where(theme => theme?.Options != null).ToList();
             SelectedTheme = CustomizableThemes.FirstOrDefault(t => t.Id == ThemeOptions.PlayniteAPI.ApplicationSettings.FullscreenTheme) ??
-                                    CustomizableThemes.FirstOrDefault(t => t.Id == ThemeOptions.PlayniteAPI.ApplicationSettings.DesktopTheme) ??
-                                    CustomizableThemes.FirstOrDefault();
+                            CustomizableThemes.FirstOrDefault(t => t.Id == ThemeOptions.PlayniteAPI.ApplicationSettings.DesktopTheme) ??
+                            CustomizableThemes.FirstOrDefault();
 
         }
 
-        private void LoadFromSettings(ThemesSelectedPresets selectedPresets, List<Theme> themes )
+        private void LoadFromSettings(Settings settings, List<Theme> themes )
         {
             foreach (var theme in themes)
             {
@@ -105,28 +133,49 @@ namespace ThemeOptions.Models
                 {
                     preset.Selected = preset.OptionsList
                         .FirstOrDefault(
-                            option => selectedPresets.ContainsKey(theme.Id)
-                                   && selectedPresets[theme.Id].Contains(option.Id));
+                            option => settings.SelectedPresets.Get(theme.Id)?.Contains(option.Id) == true);
+                }
+
+                if (theme.Options.Variables != null)
+                {
+                    var themeSettings = settings.UserSettings.Get(theme.Id);
+
+                    foreach (var variable in theme.Options.Variables)
+                    {
+                        variable.Value.Value = (
+                            themeSettings != null &&
+                            variable.Value.Type != null &&
+                            themeSettings.Get(variable.Key)?.Type == variable.Value.Type
+                            ? themeSettings[variable.Key].Value : null)
+                            ?? variable.Value.Default;
+                    }
                 }
             }
         }
 
-        private void SaveToSettings(List<Theme> themes, ThemesSelectedPresets selectedPresets)
+        private void SaveToSettings(List<Theme> themes, Settings settings)
         {
             foreach (var theme in themes)
             {
-                selectedPresets[theme.Id] = theme
+                settings.SelectedPresets[theme.Id] = theme
                     .PresetList
                     .Where(p => p.Selected != null && !p.Selected.Id.ToLower().EndsWith("default"))
                     .Select(p => p.Selected.Id).ToList();
+
+                if (theme.Options.Variables != null)
+                {
+                    settings.UserSettings[theme.Id] = new VariablesValues(
+                        theme.Options.Variables
+                        .Where(v => v.Value.Value != v.Value.Default)
+                    );
+                }
             }
         }
-
 
         public void BeginEdit()
         {
             LoadCustomizableThemes();
-            LoadFromSettings(Settings.SelectedPresets, CustomizableThemes);
+            LoadFromSettings(Settings, CustomizableThemes);
         }
 
         public void CancelEdit()
@@ -135,7 +184,7 @@ namespace ThemeOptions.Models
 
         public void EndEdit()
         {
-            SaveToSettings(CustomizableThemes, Settings.SelectedPresets);
+            SaveToSettings(CustomizableThemes, Settings);
             plugin.SavePluginSettings(Settings);
         }
 

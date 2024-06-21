@@ -18,6 +18,7 @@ using System.Windows.Markup;
 using System.Runtime.InteropServices;
 using ThemeOptions.Models;
 using ThemeOptions.Views;
+using System.Reflection.Emit;
 
 
 namespace ThemeOptions
@@ -30,6 +31,7 @@ namespace ThemeOptions
         public static string ThemesPath { get; private set; }
 
         public static SettingsViewModel Settings { get; set; }
+        public SettingsView SettingsView {get; private set;}
 
         public override Guid Id { get; } = Guid.Parse("904cbf3b-573f-48f8-9642-0a09d05c64ef");
 
@@ -91,7 +93,23 @@ namespace ThemeOptions
                 Localization.Load(theme.Path, PlayniteAPI.ApplicationSettings.Language);
             }
 
-            // TODO: Generate and loads user defined Resources
+            if (theme.Options != null)
+            {
+                var themeSettings = Settings.ThemeSettings(theme.Id);
+                if (themeSettings != null && themeSettings.Count > 0)
+                {
+                    try
+                    {
+                        var settingsText = themeSettings.FormatResourceDictionary();
+                        ResourceDictionary resource = (ResourceDictionary)XamlReader.Parse(settingsText);
+                        Application.Current.Resources.MergedDictionaries.Add(resource);
+                    }
+                    catch (Exception e)
+                    {
+                        logger.Error($"Error while parsing settings: {e.Message}");
+                    }
+                }
+            }
         }
 
         public ThemeOptions(IPlayniteAPI api) : base(api)
@@ -129,7 +147,9 @@ namespace ThemeOptions
 
         public override UserControl GetSettingsView(bool firstRunSettings)
         {
-            return new SettingsView();
+            if (SettingsView == null)
+                SettingsView = new SettingsView();
+            return SettingsView;
         }
     }
 }

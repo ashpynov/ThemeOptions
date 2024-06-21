@@ -4,9 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ThemeOptions"
+             xmlns:views="clr-namespace:ThemeOptions.Views"
              d:DataContext="{d:DesignInstance Type=local:SettingsViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="600">
+    <UserControl.Resources>
+        <views:VariablePanelItemsDataTemplateSelector x:Key="VariableTemplateSelector"/>
+    </UserControl.Resources>
 
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,20,20,20">
         <Grid.ColumnDefinitions>
@@ -14,8 +18,10 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>                 <!-- 0. Combo to select theme -->
-            <RowDefinition Height="*"/>                 <!-- 1. Presets && preview -->
+            <RowDefinition Height="Auto"/>              <!-- 0. Combo to select theme -->
+            <RowDefinition Height="Auto"/>              <!-- 1. Presets -->
+            <RowDefinition Height="Auto"/>              <!-- 2. Variables -->
+            <RowDefinition Height="*"/>                 <!-- 3.  -->
         </Grid.RowDefinitions>
         <StackPanel HorizontalAlignment="Stretch"
             Grid.Column="0"  Grid.Row="0"
@@ -24,7 +30,7 @@
                 <TextBlock DockPanel.Dock="Left"
                     Margin="0,0,10,0"
                     MinWidth="200"
-                    Text="Theme with options to configure:"
+                    Text="Choose theme to set options:"
                     VerticalAlignment="Center"/>
 
                 <ComboBox HorizontalAlignment="Stretch"
@@ -42,43 +48,85 @@
 
             <Separator Margin="0,0,0,10" />
         </StackPanel>
-
         <StackPanel HorizontalAlignment="Stretch" Margin="20,0,0,0"
-            Grid.Column="0" Grid.Row="1">
-            <ItemsControl ItemsSource="{Binding ElementName=SelectedTheme, Path=SelectedItem.PresetList}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <DockPanel>
-                            <Separator DockPanel.Dock="Bottom" Margin="0,5,0,5" />
-                            <TextBlock DockPanel.Dock="Left"
-                                Style="{StaticResource BaseTextBlockStyle}"
-                                MinWidth="200"
-                                VerticalAlignment="Center"
-                                Text="{Binding Name}" />
-                            <ComboBox HorizontalAlignment="Stretch"
-                                ItemsSource="{Binding OptionsList}"
-                                SelectedValue="{Binding Selected}"
-                                >
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel>
-                                            <TextBlock Text="{Binding Name}"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                                <ComboBox.ItemContainerStyle>
-                                    <Style TargetType="{x:Type ComboBoxItem}">
-                                        <Setter Property="local:Views.FocusHelper.IsFocused" Value = "{Binding RelativeSource={RelativeSource Self}, Path=IsFocused}" />
-                                    </Style>
-                                </ComboBox.ItemContainerStyle>
-                            </ComboBox>
-                        </DockPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            Grid.Column="0" Grid.Row="1"
+            Visibility="{Binding ElementName=SelectedTheme, Path=SelectedItem.PresetList, Converter={StaticResource ICollectionNullOrEmptyToVisibilityConverter}}"
+            >
+            <StackPanel x:Name="Presets" HorizontalAlignment="Stretch" Margin="20,0,0,0">
+                <TextBlock Margin="-20,0,0,10" Text="Presets" />
+                <Separator Margin="-20,0,0,10" />
+                <ItemsControl ItemsSource="{Binding ElementName=SelectedTheme, Path=SelectedItem.PresetList}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <Separator DockPanel.Dock="Bottom" Margin="0,5,0,5" />
+                                <TextBlock DockPanel.Dock="Left"
+                                    Style="{StaticResource BaseTextBlockStyle}"
+                                    MinWidth="200"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding Name}" />
+                                <ComboBox HorizontalAlignment="Stretch"
+                                    ItemsSource="{Binding OptionsList}"
+                                    SelectedValue="{Binding Selected}"
+                                    >
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Name}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                    <ComboBox.ItemContainerStyle>
+                                        <Style TargetType="{x:Type ComboBoxItem}">
+                                            <Setter Property="local:Views.FocusHelper.IsFocused" Value = "{Binding RelativeSource={RelativeSource Self}, Path=IsFocused}" />
+                                        </Style>
+                                    </ComboBox.ItemContainerStyle>
+                                </ComboBox>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <StackPanel x:Name="Variables" HorizontalAlignment="Stretch" Margin="20,20,0,0"
+                Visibility="{Binding ElementName=SelectedTheme, Path=SelectedItem.VariablesList, Converter={StaticResource ICollectionNullOrEmptyToVisibilityConverter}}"
+                >
+                <TextBlock Margin="-20,0,0,10" Text="Settings" />
+                <Separator Margin="-20,0,0,10" />
+                <ItemsControl
+                    ItemsSource="{Binding ElementName=SelectedTheme, Path=SelectedItem.VariablesList}"
+                    ItemTemplateSelector="{StaticResource VariableTemplateSelector}">
+                    <ItemsControl.Resources>
+                        <DataTemplate x:Key="STRING_PanelTemplate">
+                            <DockPanel Margin="0,0,0,10" MinHeight="30">
+                                <Button DockPanel.Dock="Right" Margin="10,0,0,0" >
+                                    <TextBlock Text="&#xee0b;" Margin="-3" FontFamily="{DynamicResource FontIcoFont}" />
+                                </Button>
+                                <TextBlock
+                                    Style="{StaticResource BaseTextBlockStyle}"
+                                    DockPanel.Dock="Left" Margin="0,0,10,0" MinWidth="100" Text="{Binding Title}" VerticalAlignment="Center"/>
+                                <TextBox
+                                    HorizontalAlignment="Stretch" Text="{Binding Value}"/>
+                            </DockPanel>
+                        </DataTemplate>
+                        <DataTemplate x:Key="BOOLEAN_PanelTemplate">
+                            <DockPanel Margin="0,0,0,10" MinHeight="30" >
+                                <Button DockPanel.Dock="Right" Margin="10,0,0,0" >
+                                    <TextBlock Text="&#xee0b;" Margin="-3" FontFamily="{DynamicResource FontIcoFont}" />
+                                </Button>
+                                <CheckBox VerticalAlignment="Center" IsChecked="{Binding Value}" DockPanel.Dock="Left" Margin="0,0,0,0" >
+                                    <TextBlock Margin="10,0,0,0"
+                                        Style="{StaticResource BaseTextBlockStyle}"
+                                        Text="{Binding Title}" VerticalAlignment="Center"/>
+                                </CheckBox>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ItemsControl.Resources>
+                </ItemsControl>
+            </StackPanel>
         </StackPanel>
         <Image
-            Grid.Column="1" Grid.Row="1"
+            Grid.Column="1" Grid.Row="1" Grid.RowSpan="3"
             Margin="40,0,0,0"
             VerticalAlignment="Top"
             HorizontalAlignment="Left"
@@ -87,6 +135,8 @@
             MaxHeight="{Binding Source.PixelHeight,RelativeSource={RelativeSource Self}}"
             Source="{Binding PreviewImage, TargetNullValue={x:Null}}"
         />
+
+
     </Grid>
 
 </UserControl>

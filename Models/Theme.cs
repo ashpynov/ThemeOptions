@@ -16,7 +16,8 @@ namespace ThemeOptions.Models
         public string Path { get; set; }
         public Options Options { get; set; }
 
-        public List<Preset> PresetList { get => Options.Presets.Values.ToList(); }
+        public List<Preset> PresetList { get => Options.Presets?.Values.ToList() ?? new List<Preset>(); }
+        public List<Variable> VariablesList { get => Options.Variables?.Values.ToList() ?? new List<Variable>(); }
 
         private static readonly ILogger logger = LogManager.GetLogger();
         public static Theme FromFile(string path)

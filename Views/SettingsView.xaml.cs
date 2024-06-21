@@ -16,6 +16,30 @@ using ThemeOptions.Models;
 
 namespace ThemeOptions.Views
 {
+
+    public class VariablePanelItemsDataTemplateSelector : DataTemplateSelector
+    {
+        public override DataTemplate
+            SelectTemplate(object item, DependencyObject container)
+        {
+            FrameworkElement element = container as FrameworkElement;
+
+            if (element != null && item != null && item is Variable && (item as Variable).Type != null )
+            {
+                try
+                {
+                    return element.FindResource((item as Variable).Type.ToUpper() + "_PanelTemplate") as DataTemplate;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+
+            return null;
+        }
+    }
+
     public partial class SettingsView : UserControl
     {
         public SettingsView()
