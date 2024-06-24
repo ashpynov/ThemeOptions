@@ -1,20 +1,25 @@
-using System;
-using System.IO;
-using System.Collections.Generic;
-using Playnite.SDK;
-using Playnite.SDK.Data;
-using System.Linq;
-using System.CodeDom;
-using System.Runtime.InteropServices;
-using System.Windows.Controls;
-
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace ThemeOptions.Models
 {
-    public class VariableValue
+    public class VariableValue: INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private string _value;
+
         public string Type { get; set; }
-        public string Value { get; set; }
+        public string Value { get => _value;
+        set
+        {
+            _value = value;
+            OnPropertyChanged();
+        }}
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
     }
 
     public class Variable : VariableValue

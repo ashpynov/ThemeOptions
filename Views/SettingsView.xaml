@@ -30,7 +30,8 @@
                 <TextBlock DockPanel.Dock="Left"
                     Margin="0,0,10,0"
                     MinWidth="200"
-                    Text="Choose theme to set options:"
+                    MaxWidth="200"
+                    Text="{DynamicResource LOCThemeOptionsSettingsChooseTheme}"
                     VerticalAlignment="Center"/>
 
                 <ComboBox HorizontalAlignment="Stretch"
@@ -49,11 +50,10 @@
             <Separator Margin="0,0,0,10" />
         </StackPanel>
         <StackPanel HorizontalAlignment="Stretch" Margin="20,0,0,0"
-            Grid.Column="0" Grid.Row="1"
-            Visibility="{Binding ElementName=SelectedTheme, Path=SelectedItem.PresetList, Converter={StaticResource ICollectionNullOrEmptyToVisibilityConverter}}"
-            >
-            <StackPanel x:Name="Presets" HorizontalAlignment="Stretch" Margin="20,0,0,0">
-                <TextBlock Margin="-20,0,0,10" Text="Presets" />
+            Grid.Column="0" Grid.Row="1" >
+            <StackPanel x:Name="Presets" HorizontalAlignment="Stretch" Margin="20,0,0,0"
+                Visibility="{Binding ElementName=SelectedTheme, Path=SelectedItem.PresetList, Converter={StaticResource ICollectionNullOrEmptyToVisibilityConverter}}">
+                <TextBlock Margin="-20,0,0,10" Text="{DynamicResource LOCThemeOptionsSettingsPresets}" />
                 <Separator Margin="-20,0,0,10" />
                 <ItemsControl ItemsSource="{Binding ElementName=SelectedTheme, Path=SelectedItem.PresetList}">
                     <ItemsControl.ItemTemplate>
@@ -91,7 +91,7 @@
             <StackPanel x:Name="Variables" HorizontalAlignment="Stretch" Margin="20,20,0,0"
                 Visibility="{Binding ElementName=SelectedTheme, Path=SelectedItem.VariablesList, Converter={StaticResource ICollectionNullOrEmptyToVisibilityConverter}}"
                 >
-                <TextBlock Margin="-20,0,0,10" Text="Settings" />
+                <TextBlock Margin="-20,0,0,10" Text="{DynamicResource LOCThemeOptionsSettingsVariables}" />
                 <Separator Margin="-20,0,0,10" />
                 <ItemsControl
                     ItemsSource="{Binding ElementName=SelectedTheme, Path=SelectedItem.VariablesList}"
@@ -99,7 +99,10 @@
                     <ItemsControl.Resources>
                         <DataTemplate x:Key="STRING_PanelTemplate">
                             <DockPanel Margin="0,0,0,10" MinHeight="30">
-                                <Button DockPanel.Dock="Right" Margin="10,0,0,0" >
+                                <Button DockPanel.Dock="Right" Margin="10,0,0,0"
+                                    Command="{x:Static views:Commands.ResetToDefault}"
+                                    CommandParameter="{Binding}"
+                                >
                                     <TextBlock Text="&#xee0b;" Margin="-3" FontFamily="{DynamicResource FontIcoFont}" />
                                 </Button>
                                 <TextBlock
@@ -111,7 +114,9 @@
                         </DataTemplate>
                         <DataTemplate x:Key="BOOLEAN_PanelTemplate">
                             <DockPanel Margin="0,0,0,10" MinHeight="30" >
-                                <Button DockPanel.Dock="Right" Margin="10,0,0,0" >
+                                <Button DockPanel.Dock="Right" Margin="10,0,0,0"
+                                    Command="{x:Static views:Commands.ResetToDefault}"
+                                    CommandParameter="{Binding}" >
                                     <TextBlock Text="&#xee0b;" Margin="-3" FontFamily="{DynamicResource FontIcoFont}" />
                                 </Button>
                                 <CheckBox VerticalAlignment="Center" IsChecked="{Binding Value}" DockPanel.Dock="Left" Margin="0,0,0,0" >

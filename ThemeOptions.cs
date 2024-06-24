@@ -1,24 +1,17 @@
-﻿using Playnite;
-using Playnite.SDK;
-using Playnite.SDK.Plugins;
-using Playnite.SDK.Events;
-using Playnite.SDK.Data;
-using Playnite.SDK.Models;
-using System;
+﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using System.Reflection;
 using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Markup;
-using System.Runtime.InteropServices;
+
+using Playnite.SDK;
+using Playnite.SDK.Plugins;
+using Playnite.SDK.Data;
+
 using ThemeOptions.Models;
 using ThemeOptions.Views;
-using System.Reflection.Emit;
 
 
 namespace ThemeOptions
@@ -31,7 +24,7 @@ namespace ThemeOptions
         public static string ThemesPath { get; private set; }
 
         public static SettingsViewModel Settings { get; set; }
-        public SettingsView SettingsView {get; private set;}
+        public Views.SettingsView SettingsView {get; private set;}
 
         public override Guid Id { get; } = Guid.Parse("904cbf3b-573f-48f8-9642-0a09d05c64ef");
 
@@ -72,7 +65,7 @@ namespace ThemeOptions
             Theme theme = Theme.FromId(themeId);
             if (theme == null) return;
 
-            if (theme.Options != null)
+            if (theme.Options?.Presets?.Count > 0)
             {
                 List<string> selectedPresets = Settings.ThemePresets(theme.Id);
                 if (selectedPresets?.Count > 0)
@@ -123,6 +116,10 @@ namespace ThemeOptions
             };
             Localization.Load(PluginFolder, PlayniteAPI.ApplicationSettings.Language);
             LoadThemeOption();
+            if (PlayniteAPI.ApplicationInfo.Mode == ApplicationMode.Fullscreen)
+            {
+                FullscreenSettingsView.Init();
+            }
         }
 
         public Options FromFile(string optionsFile)
@@ -148,8 +145,8 @@ namespace ThemeOptions
         public override UserControl GetSettingsView(bool firstRunSettings)
         {
             if (SettingsView == null)
-                SettingsView = new SettingsView();
-            return SettingsView;
+                SettingsView = new Views.SettingsView();
+            return SettingsView as UserControl;
         }
     }
 }

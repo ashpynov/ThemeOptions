@@ -1,0 +1,190 @@
+<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:pctrls="clr-namespace:Playnite.FullscreenApp.Controls;assembly=Playnite.FullscreenApp"
+             xmlns:pbeh="clr-namespace:Playnite.Behaviors;assembly=Playnite"
+             xmlns:local="clr-namespace:ThemeOptions;assembly=ThemeOptions"
+             xmlns:views="clr-namespace:ThemeOptions.Views;assembly=ThemeOptions"
+             mc:Ignorable="d"
+             d:DesignHeight="400" d:DesignWidth="600"
+             >
+    <UserControl.Resources>
+        <views:VariablePanelItemsDataTemplateSelector x:Key="VariableTemplateSelector"/>
+        <Style TargetType="pctrls:CheckBoxEx" BasedOn="{StaticResource SettingsSectionCheckbox}" />
+        <Style TargetType="pctrls:ComboBoxEx" BasedOn="{StaticResource SettingsSectionCombobox}" />
+        <Style TargetType="TextBlock" BasedOn="{StaticResource SettingsSectionText}" />
+        <Style TargetType="Grid" x:Key="ThemeOptionsPreviewImageGridStyle">
+            <Setter Property="Margin" Value="0,420,-440,-600" />
+            <Setter Property="Width" Value="360" />
+            <Setter Property="Height" Value="360" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+        <Style TargetType="Image" x:Key="ThemeOptionsPreviewImageStyle">
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+
+        <DataTemplate x:Key="SettingsMenuThemeOptionsButtonTemplate">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="&#xef4b;" FontFamily="{DynamicResource FontIcoFont}" FontSize="24"
+                           VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,10,0"/>
+                <TextBlock Text="{DynamicResource LOCThemeOptionsSettingsMenu}" VerticalAlignment="Center" />
+            </StackPanel>
+        </DataTemplate>
+
+        <Style x:Key="SettingsSectionInputBoxStyle" TargetType="{x:Type ButtonEx}" BasedOn="{StaticResource {x:Type ButtonEx}}">
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="MinWidth" Value="300" />
+            <Setter Property="Margin"  Value="10,0,10,10" />
+        </Style>
+
+        <DataTemplate x:Key="SettingsSectionInputBoxTemplate">
+            <DockPanel MinWidth="{Binding MinWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ButtonEx}}}">
+                <Viewbox DockPanel.Dock="Right" Height="20" Margin="10,0,0,0">
+                    <TextBlock Text="&#xec55;" FontFamily="{StaticResource FontIcoFont}"
+                               Foreground="{DynamicResource TextBrush}"
+                               FontSize="{DynamicResource FontSize}"
+                               VerticalAlignment="Center"/>
+                </Viewbox>
+                <ContentPresenter DockPanel.Dock="Left"
+                                  Content="{Binding}"
+                                  HorizontalAlignment="Left"
+                                  VerticalAlignment="Center"/>
+            </DockPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid
+        HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,20,20,20"
+
+    >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>              <!-- 0. Combo to select theme -->
+            <RowDefinition Height="Auto"/>              <!-- 1. Presets -->
+            <RowDefinition Height="Auto"/>              <!-- 2. Variables -->
+            <RowDefinition Height="*"/>                 <!-- 3.  -->
+        </Grid.RowDefinitions>
+        <StackPanel HorizontalAlignment="Stretch"
+            Grid.Column="0"  Grid.Row="0"
+            Visibility="Collapsed"
+        >
+            <DockPanel Margin="0,0,0,10" >
+                <TextBlock DockPanel.Dock="Left"
+                    Margin="0,0,10,0"
+                    MinWidth="200"
+                    MaxWidth="200"
+                    Text="Choose theme to set options:"
+                    VerticalAlignment="Center"/>
+
+                <pctrls:ComboBoxEx HorizontalAlignment="Stretch"
+                    x:Name="SelectedTheme"
+                    Style="{StaticResource SettingsSectionCombobox}"
+                    SelectedItem="{Binding SelectedTheme, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    ItemsSource="{Binding CustomizableThemes}"
+                    MinWidth="200"
+                    >
+                    <pctrls:ComboBoxEx.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </pctrls:ComboBoxEx.ItemTemplate>
+                </pctrls:ComboBoxEx>
+            </DockPanel >
+
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="1" >
+            <StackPanel
+                x:Name="Presets"
+                HorizontalAlignment="Stretch"
+                Visibility="{Binding ElementName=SelectedTheme, Path=SelectedItem.PresetList, Converter={StaticResource ICollectionNullOrEmptyToVisibilityConverter}}">
+                <pctrls:ItemsControlEx
+                    ItemsSource="{Binding ElementName=SelectedTheme, Path=SelectedItem.PresetList}"
+                    Focusable="False">
+                    <pctrls:ItemsControlEx.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel LastChildFill="False">
+                                <TextBlock DockPanel.Dock="Left"
+                                    Text="{Binding Name}"
+                                    Style="{StaticResource SettingsSectionText}" />
+                                <pctrls:ComboBoxEx HorizontalAlignment="Stretch"
+                                    ItemsSource="{Binding OptionsList}"
+                                    SelectedValue="{Binding Selected}"
+                                    DockPanel.Dock="Right"
+                                    Style="{StaticResource SettingsSectionCombobox}"
+                                    >
+                                    <pctrls:ComboBoxEx.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Name}" />
+                                        </DataTemplate>
+                                    </pctrls:ComboBoxEx.ItemTemplate>
+                                    <pctrls:ComboBoxEx.ItemContainerStyle>
+                                        <Style TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
+                                            <Setter Property="local:Views.FocusHelper.IsFocused" Value = "{Binding RelativeSource={RelativeSource Self}, Path=IsFocused}" />
+                                        </Style>
+                                    </pctrls:ComboBoxEx.ItemContainerStyle>
+                                </pctrls:ComboBoxEx>
+                            </DockPanel>
+                        </DataTemplate>
+                    </pctrls:ItemsControlEx.ItemTemplate>
+                </pctrls:ItemsControlEx>
+            </StackPanel>
+
+            <StackPanel x:Name="Variables" HorizontalAlignment="Stretch" Margin="0,20,0,0"
+                Visibility="{Binding ElementName=SelectedTheme, Path=SelectedItem.VariablesList, Converter={StaticResource ICollectionNullOrEmptyToVisibilityConverter}}"
+                >
+                <pctrls:ItemsControlEx
+                    ItemsSource="{Binding ElementName=SelectedTheme, Path=SelectedItem.VariablesList}"
+                    Focusable="False"
+                    ItemTemplateSelector="{StaticResource VariableTemplateSelector}">
+                    <pctrls:ItemsControlEx.Resources>
+                        <DataTemplate x:Key="STRING_PanelTemplate">
+                            <DockPanel LastChildFill="False">
+                                <TextBlock Text="{Binding Title}"
+                                    Style="{StaticResource SettingsSectionText}"
+                                    DockPanel.Dock="Left" />
+
+                                <pctrls:ButtonEx
+                                    Style="{StaticResource SettingsSectionInputBoxStyle}"
+                                    DockPanel.Dock="Right"
+                                    Content="{Binding Value}"
+                                    ContentTemplate="{DynamicResource SettingsSectionInputBoxTemplate}"
+                                    HorizontalAlignment="Right"
+                                    Command="{x:Static views:Commands.TextInputCommand}"
+                                    CommandParameter="{Binding}"
+                                    >
+                                </pctrls:ButtonEx>
+                            </DockPanel>
+                        </DataTemplate>
+                        <DataTemplate x:Key="BOOLEAN_PanelTemplate">
+                            <DockPanel LastChildFill="True">
+                                <pctrls:CheckBoxEx
+                                    Style="{StaticResource SettingsSectionCheckbox}"
+                                    Content="{Binding Title}"
+                                    VerticalAlignment="Center"
+                                    IsChecked="{Binding Value}"
+                                    DockPanel.Dock="Left" >
+                                </pctrls:CheckBoxEx>
+                            </DockPanel>
+                        </DataTemplate>
+                    </pctrls:ItemsControlEx.Resources>
+                </pctrls:ItemsControlEx>
+            </StackPanel>
+        </StackPanel>
+        <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="3"
+            Style="{DynamicResource ThemeOptionsPreviewImageGridStyle}"
+        >
+        <Image
+            Style="{DynamicResource ThemeOptionsPreviewImageStyle}"
+            Stretch="Uniform"
+            MaxWidth="{Binding Source.PixelWidth,RelativeSource={RelativeSource Self}}"
+            MaxHeight="{Binding Source.PixelHeight,RelativeSource={RelativeSource Self}}"
+            Source="{Binding PreviewImage, TargetNullValue={x:Null}}"
+        /></Grid>
+    </Grid>
+</UserControl>
