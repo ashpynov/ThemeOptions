@@ -120,3 +120,72 @@ So order is next:
 5. Selected theme presets constants
 6. User theme settings
 
+## Fullscreen setting menu integration
+Plugin support integration of Theme Options settings into Main menu->Settings in fullscreen.
+As soon as various themes has very wide customisations of default controls - ability to shange styles was introduced with next keys and types. Tune this stlyle according to your theme and settings. The best location is native `Views\SettingsMenus.xaml` file.
+
+### Theme options menu item
+```xml
+<DataTemplate x:Key="SettingsMenuThemeOptionsButtonTemplate">
+    <StackPanel Orientation="Horizontal">
+        <TextBlock Text="&#xef4b;" FontFamily="{DynamicResource FontIcoFont}" FontSize="24"
+                    VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,10,0"/>
+        <TextBlock Text="{DynamicResource LOCThemeOptionsSettingsMenu}" VerticalAlignment="Center" />
+    </StackPanel>
+</DataTemplate>
+```
+Specify look and feel of Theme Options menu item in settings menu.
+
+### Preview image location
+
+Next style define location of preview image relative to main settings dialog window
+```xml
+    <Style TargetType="Grid" x:Key="ThemeOptionsPreviewImageGridStyle">
+        <Setter Property="Margin" Value="0,420,-440,-600" />
+        <Setter Property="Width" Value="360" />
+        <Setter Property="Height" Value="360" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+    </Style>
+```
+
+Additionaly to specify image location withing placeholder use
+```xml
+    <Style TargetType="Image" x:Key="ThemeOptionsPreviewImageStyle">
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+    </Style>
+```
+
+### Text Input Button/box
+As soon as Fullscreen mode is aimed to be used with control, typing is tricky. Instead of using native TextBox field, it is using button to open On-screen keyboard to type text.
+So if you theme use sreing variables - you may need to customize look and feel of this 'TextBox button"
+
+Style to configure button style (: (mostly for location and margins)
+```xml
+    <Style x:Key="SettingsSectionInputBoxStyle" TargetType="{x:Type ButtonEx}" BasedOn="{StaticResource {x:Type ButtonEx}}">
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="MinWidth" Value="300" />
+        <Setter Property="Margin"  Value="10,0,10,10" />
+    </Style>
+```
+
+and data template to specify content template:
+```xml
+    <DataTemplate x:Key="SettingsSectionInputBoxTemplate">
+        <DockPanel Margin="0,-10,0,-10" MinWidth="{Binding MinWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ButtonEx}}}">
+            <Viewbox DockPanel.Dock="Right" Height="32" Margin="20,0,0,0">
+                <TextBlock Text="&#xec55;" FontFamily="{StaticResource FontIcoFont}"
+                           Foreground="{DynamicResource TextBrush}"
+                           FontSize="{DynamicResource FontSize}"
+                           VerticalAlignment="Center"/>
+            </Viewbox>
+            <TextBlock  DockPanel.Dock="Left"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        FontFamily="Segoe UI Light">
+                <ContentPresenter Content="{Binding}" />
+            </TextBlock>
+        </DockPanel>
+    </DataTemplate>
+```
