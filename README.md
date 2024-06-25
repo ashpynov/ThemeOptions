@@ -1,7 +1,7 @@
 # Theme Options Extension for Playnite
 ![DownloadCountTotal](https://img.shields.io/github/downloads/ashpynov/ThemeOptions/total?label=total%20downloads&style=plastic) ![DownloadCountLatest](https://img.shields.io/github/downloads/ashpynov/ThemeOptions/latest/total?style=plastic) ![LatestVersion](https://img.shields.io/github/v/tag/ashpynov/ThemeOptions?label=Latest%20version&style=plastic) ![License](https://img.shields.io/github/license/ashpynov/ThemeOptions?style=plastic)
 
-Theme Options is an extension for Playnite game manager and launcher to give ability to Theme designers to provide a wide range options configurable by User. Additionaly in give to them Localization support.
+Theme Options is an extension for Playnite game manager and launcher to give ability to Theme designers to provide a wide range options configurable by User. Additionaly it will add to Theme Localization support.
 
 So theme may have:
 - Presets - a set of theme styles to be enabled by user. This presets my be be complex and drasticaly modify them look'n'feel. User may choose one option for each preset.
