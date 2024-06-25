@@ -1,5 +1,37 @@
+# Theme Options Extension for Playnite
+![DownloadCountTotal](https://img.shields.io/github/downloads/ashpynov/ThemeOptions/total?label=total%20downloads&style=plastic) ![DownloadCountLatest](https://img.shields.io/github/downloads/ashpynov/ThemeOptions/latest/total?style=plastic) ![LatestVersion](https://img.shields.io/github/v/tag/ashpynov/ThemeOptions?label=Latest%20version&style=plastic) ![License](https://img.shields.io/github/license/ashpynov/ThemeOptions?style=plastic)
+
+Theme Options is an extension for Playnite game manager and launcher to give ability to Theme designers to provide a wide range options configurable by User. Additionaly in give to them Localization support.
+
+So theme may have:
+- Presets - a set of theme styles to be enabled by user. This presets my be be complex and drasticaly modify them look'n'feel. User may choose one option for each preset.
+- Settings or Variables - some flags or texts to be used by themes. This may be simple flag to enable/disable some theme features or on screen texts like user name.
+- Localizations - Theme may provide a support of locales string. This will be automaticly loaded if playnite language differ from en_US (en_US locale had to be defined in native theme file to be full functional if theme options extension absent).
+
+This Extension add theme configuration options menu in both - Desktop at usual extension configuration place, and in Fullscreen mode at Main menu -> Settings -> Theme Options.
+Please note: as soon as implementation of custom settings/menus in Fullscreen modes is not expected by Playnite developers - it use some non-PlayniteSDK way to integrate with Playnite application. So this functionality depends from Playnite verson and may be affected by update. In this case it will remove Fullscreen Settings menu item, but don't worry - Desktop mode will allow you to configure your favourite fullscreen theme, why I will update integration code.
+
+[Latest Release](https://github.com/ashpynov/ThemeOptions/releases/latest)
+
+## If you feel like supporting
+I do everything in my spare time for free, if you feel something aided you and you want to support me, you can always buy me a "koffie" as we say in dutch, no obligations whatsoever...
+
+<a href='https://ko-fi.com/ashpynov' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi2.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+
+If you may not use Ko-Fi in you country, it should not stop you! On [boosty](https://boosty.to/ashpynov/donate) you may support me and other creators.
+
+
+# Some technical stuff
+
+Extension does not modify any existing theme files. Instead it load additional resources files on start and generate additional resources in memory. Thats if the extension will be disabled - all effects removed. This means that themes have to be designed the way to be fully functional in theit 'default' view if extension disabled - all used resources with default values should be declared in scope of native theme files like 'contants.xaml'. And modded resources should override existing ones by theme options extension.
+
+## Localization
+To support localization - no additional theme manifest required. Just add locales resources into Localization folder in your theme and it will be loaded automaticly (except of en_US - default theme version has to contain default language in native theme files. I recommend constants.xaml). Please refere to Playnite source code, or almost any (including this) extension code for localization resource samples.
+
 ## Structure of theme options manifest file
-Theme options looks up options.yaml file with descriptions of presets of theme option.
+To add ability to configure variables and presets - additional theme manifest file is required.
+
+Theme options looks up options.yaml file next to theme.yaml file with descriptions of presets of theme option.
 Each theme may have multiple groups of presets, with set of Presets.
 Each Preset has:
 - Name to show
@@ -72,11 +104,24 @@ Presets option with id equal to 'default' will be shown as selected options in s
 
 Also preset may contain one or many constants redifinition - this may be alternative if it is no reasonable to have dedicated xaml file. Constants definition is next:
 ```yaml
+constant_key:
+    Type: constant_type
+    Value: constant_value
+```
+
+This will generate resource record as
+```xml
+<ns:constant_type x:Key="constant_key">constant_value</ns:constant_type>
+```
+Please note that type should not include namespace part - it will be added automaticly if required.
+
+E.g. this declaration:
+```yaml
 TopButtonAlways:
     Type: Boolean
     Value: False
 ```
-this will generate xaml definition:
+will generate xaml definition:
 
 ```xml
 <sys:Boolean x:Key="TopButtonAlways">False</sys:Boolean>
@@ -99,7 +144,7 @@ Specification contains field:
 - Default - default value to be shown in settings
 
 User will be able to specify valuse on user settings page.
-Suported list of variables Types:
+Supported list of variables Types:
 - String (via TextBox)
 - Boolean (via CheckBox)
 

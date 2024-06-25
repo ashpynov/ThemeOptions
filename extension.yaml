@@ -1,7 +1,20 @@
 ﻿Id: ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef
 Name: Theme Options
 Author: Artem Shpynov
-Version: 0.3
+Version: 0.4
 Module: ThemeOptions.dll
 Type: GenericPlugin
 Icon: icon.png
+Links:
+    - Name: Github
+      Url: https://github.com/ashpynov/ThemeOptions
+    - Name: License
+      Url: https://github.com/ashpynov/ThemeOptions/LICENSE
+    - Name: Support(Discord)
+      Url: https://discord.com/channels/365863063296933888/808419165311467630
+    - Name: Bug tracker
+      Url: https://github.com/ashpynov/ThemeOptions/issues
+    - Name: Ko-fi for Tips
+      Url: https://ko-fi.com/ashpynov
+    - Name: Boosty for Tips
+      Url: https://boosty.to/ashpynov/donate
