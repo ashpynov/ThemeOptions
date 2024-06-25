@@ -3,10 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using Playnite.SDK;
 using Playnite.SDK.Data;
-using System.Linq;
-using System.CodeDom;
-using System.Runtime.InteropServices;
-using System.Windows.Controls;
+using System.Windows;
 
 
 namespace ThemeOptions.Models
@@ -36,6 +33,30 @@ namespace ThemeOptions.Models
             {
                 logger.Error($"Error loading theme option file {path}: \n{e.Message}");
                 return null;
+            }
+        }
+        public void Translate(string themePath, string language)
+        {
+            ResourceDictionary locale = language != "en_US" ? Localization.LoadDictionary(themePath, language) : null;
+            if (locale == null) return;
+            if (Variables?.Count > 0)
+            {
+                foreach (var v in Variables)
+                {
+                    if (v.Value.LocKey != null && locale.Contains(v.Value.LocKey) )
+                    {
+                        v.Value.Title = locale[v.Value.LocKey] as string;
+                    }
+                }
+            }
+            if (Presets?.Count > 0)
+            {
+                Presets.Enumerate().ForEach(p => {
+                    if (p.Value.LocKey != null && locale.Contains(p.Value.LocKey))
+                    {
+                        p.Value.Name = locale[p.Value.LocKey] as string;
+                    }
+                });
             }
         }
     }

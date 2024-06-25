@@ -25,6 +25,7 @@ namespace ThemeOptions.Models
     public class Variable : VariableValue
     {
         public string Title { get; set; }
+        public string LocKey { get; set; }
         public string Default { get; set; }
         public string Description { get; set; }
         public string Preview{ get; set; }

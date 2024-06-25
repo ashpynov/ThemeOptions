@@ -1,6 +1,6 @@
 AddonId: 'ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef'
 Packages:
-  - Version: 0.4
+  - Version: 0.5
     RequiredApiVersion: 6.11.0
     ReleaseDate: 2024-06-25
     PackageUrl: https://github.com/ashpynov/ThemeOptions/releases/download/v0.4/ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef_0_4.pext

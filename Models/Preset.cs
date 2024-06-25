@@ -1,12 +1,8 @@
-using System;
-using System.IO;
+
 using System.Collections.Generic;
-using Playnite.SDK;
-using Playnite.SDK.Data;
 using System.Linq;
-using System.CodeDom;
-using System.Runtime.InteropServices;
-using System.Windows.Controls;
+
+using Playnite.SDK.Data;
 
 
 namespace ThemeOptions.Models
@@ -16,6 +12,7 @@ namespace ThemeOptions.Models
 #pragma warning disable 0649
         public string Id { get; set; }
         public string Name { get; set; }
+        public string LocKey { get; set; }
         public string Preview { get; set; }
         public Presets Presets { get; set; }
         public List<string> Files { get; set; }

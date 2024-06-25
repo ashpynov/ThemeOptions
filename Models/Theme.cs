@@ -1,11 +1,11 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using Playnite.SDK;
-using Playnite.SDK.Data;
-using ThemeOptions;
+
 using System.Linq;
 
+using Playnite.SDK;
+using Playnite.SDK.Data;
 
 namespace ThemeOptions.Models
 {
@@ -69,5 +69,10 @@ namespace ThemeOptions.Models
             }
         }
         private static Theme FindTheme(string themeId) => EnumThemes().FirstOrDefault(theme => theme.Id == themeId);
+
+        public void TranslateOptions()
+        {
+            Options?.Translate(Path, ThemeOptions.PlayniteAPI.ApplicationSettings.Language);
+        }
     }
 }

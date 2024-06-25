@@ -123,6 +123,7 @@ namespace ThemeOptions.Models
         {
             foreach (var theme in themes)
             {
+                theme.TranslateOptions();
                 foreach (var preset in theme.PresetList)
                 {
                     preset.Selected = preset.OptionsList

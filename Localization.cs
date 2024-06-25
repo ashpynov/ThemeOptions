@@ -17,6 +17,16 @@ namespace ThemeOptions
         public static void Load(string folder, string language = "en_US")
         {
             var dictionaries = Application.Current.Resources.MergedDictionaries;
+
+            ResourceDictionary res = LoadDictionary(folder, language);
+            if (res != null)
+            {
+                dictionaries.Add(res);
+            }
+        }
+
+        public static ResourceDictionary LoadDictionary(string folder, string language = "en_US")
+        {
             var langFile = Path.Combine(folder, "Localization", language + ".xaml");
 
             // Load localization
@@ -38,19 +48,19 @@ namespace ThemeOptions
                             res.Remove(key);
                         }
                     }
+                    return res;
                 }
                 catch (Exception ex)
                 {
                     Logger.Error(ex, $"Failed to parse localization file {langFile}.");
-                    return;
                 }
-
-                dictionaries.Add(res);
             }
             else
             {
                 Logger.Warn($"File {langFile} not found.");
             }
+
+            return null;
         }
     }
 }

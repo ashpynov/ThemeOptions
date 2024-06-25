@@ -37,6 +37,7 @@ Each Preset has:
 - Name to show
 - Preview image
 - List of additional xaml file need to be loaded to activate preset
+- LocKey - key to localized Name of preset
 
 Format is next:
 
@@ -48,9 +49,11 @@ Presets:
         Presets:
             Default:
                 Name: <Default preset name>
+                LocKey: <localization key>
                 Preview: <relative path to preview image(optional)>
             <preset_1_id>:
                 Name: <Preset 1.1 name>
+                LocKey: <localization key>
                 Preview: <relative path to preview image(optional)>
                 Files:
                     - <relative path to additional xaml file>
@@ -64,12 +67,15 @@ Presets:
                         Value: <value>
     <preset_group_id_2>:
         Name: <Group 2 User friendly name>
+        LocKey: <localization key>
         Presets:
             Default:
                 Name: <Default preset name>
+                LocKey: <localization key>
                 Preview: <relative path to preview image(optional)>
             <preset_1_id>:
                 Name: <Preset 2.1 name>
+                LocKey: <localization key>
                 Preview: <relative path to preview image(optional)>
                 Files:
                     - <relative path to additional xaml file>
@@ -77,10 +83,12 @@ Presets:
 Variables:
     <variable_key>:
         Title: <user friendly name>
+        LocKey: <localization key>
         Type: <type String|Boolean>
         Default: <default value>
     <variable_key>:
         Title: <user friendly name>
+        LocKey: <localization key>
         Type: <type String|Boolean>
         Default: <default value>
 
@@ -140,6 +148,7 @@ Currently types are supported:
 Also It is possible to define user customizable 'Theme settings' or Variables
 Specification contains field:
 - Title - for user friendly name
+- LocKey - Key for localized string for title (optional)
 - Type - type of variable
 - Default - default value to be shown in settings
 

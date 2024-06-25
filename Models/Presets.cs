@@ -1,16 +1,12 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using Playnite.SDK;
-using Playnite.SDK.Data;
-using System.Linq;
-using System.CodeDom;
-using System.Runtime.InteropServices;
-using System.Windows.Controls;
+
 
 
 namespace ThemeOptions.Models
 {
+    using PresetPair = KeyValuePair<string, Preset>;
     public class Presets : DictNoCase<Preset>
     {
         /*  Gets end suboption node by dot delemeted path  */
@@ -96,6 +92,25 @@ namespace ThemeOptions.Models
             for (int index = 0; index < toProcess.Count; index++)
             {
                 ProcessSubPresets(toProcess[index].Id, toProcess[index].Presets, toProcess);
+            }
+        }
+
+        public IEnumerable<PresetPair>Enumerate()
+        {
+            Queue<PresetPair> toProcess = new Queue<PresetPair>();
+
+            if (this != null )
+                foreach(var p in this)
+                    toProcess.Enqueue(p);
+
+            while (toProcess.Count > 0)
+            {
+                PresetPair preset = toProcess.Dequeue();
+                if (preset.Value.Presets != null)
+                    foreach(var p in preset.Value.Presets)
+                        toProcess.Enqueue(p);
+
+                yield return preset;
             }
         }
     }
