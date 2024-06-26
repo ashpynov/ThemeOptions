@@ -61,7 +61,7 @@
         HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,20,20,20"
 
     >
-        <pctrls:ScrollViewerEx Style="{DynamicResource ThemeOptionsSettingsScrollViewerStyle}" >
+        <pctrls:ScrollViewerEx Style="{DynamicResource ThemeOptionsSettingsScrollViewerStyle}" Focusable="False">
             <StackPanel HorizontalAlignment="Stretch"  >
                 <StackPanel x:Name="ThemeSelector"
                     HorizontalAlignment="Stretch"
