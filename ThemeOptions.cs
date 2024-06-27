@@ -120,6 +120,12 @@ namespace ThemeOptions
             {
                 FullscreenSettingsView.Init();
             }
+
+            AddSettingsSupport(new AddSettingsSupportArgs
+            {
+                SourceName = "ThemeOptions",
+                SettingsRoot = $"{nameof(Settings)}.{nameof(Settings.Settings)}"
+            });
         }
 
         public Options FromFile(string optionsFile)

@@ -28,6 +28,8 @@ namespace ThemeOptions.Models
         public ThemesSelectedPresets SelectedPresets { get => selectedPresets; }
 
         public ThemesSettings UserSettings { get => userSettings; }
+
+        public bool IsInstalled { get => true; }
     }
 
     public class SettingsViewModel : ObservableObject, ISettings, INotifyPropertyChanged

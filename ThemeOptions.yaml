@@ -1,5 +1,11 @@
 AddonId: 'ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef'
 Packages:
+  - Version: 0.7
+    RequiredApiVersion: 6.11.0
+    ReleaseDate: 2024-06-27
+    PackageUrl: https://github.com/ashpynov/ThemeOptions/releases/download/v0.7/ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef_0_7.pext
+    Changelog:
+      - Added PluginSettings IsInstalled bool to check installed status (#2)
   - Version: 0.6
     RequiredApiVersion: 6.11.0
     ReleaseDate: 2024-06-26

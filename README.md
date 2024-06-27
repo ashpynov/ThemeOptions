@@ -28,6 +28,14 @@ Extension does not modify any existing theme files. Instead it load additional r
 ## Localization
 To support localization - no additional theme manifest required. Just add locales resources into Localization folder in your theme and it will be loaded automaticly (except of en_US - default theme version has to contain default language in native theme files. I recommend constants.xaml). Please refere to Playnite source code, or almost any (including this) extension code for localization resource samples.
 
+## Plugin installation status
+
+To detect installation status, extension exposed 'IsInstalled' path via PluginSettings with boolean value:
+
+```xml
+Binding="{PluginSettings Plugin=ThemeOptions, Path=IsInstalled}" Value="True"
+```
+
 ## Structure of theme options manifest file
 To add ability to configure variables and presets - additional theme manifest file is required.
 
