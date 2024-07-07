@@ -114,7 +114,7 @@ namespace ThemeOptions.Models
 
         private void LoadCustomizableThemes()
         {
-            CustomizableThemes = Theme.EnumThemes().Where(theme => theme?.Options != null).ToList();
+            CustomizableThemes = Theme.EnumThemes().ToList();
             SelectedTheme = CustomizableThemes.FirstOrDefault(t => t.Id == ThemeOptions.PlayniteAPI.ApplicationSettings.FullscreenTheme) ??
                             CustomizableThemes.FirstOrDefault(t => t.Id == ThemeOptions.PlayniteAPI.ApplicationSettings.DesktopTheme) ??
                             CustomizableThemes.FirstOrDefault();

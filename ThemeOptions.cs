@@ -21,7 +21,6 @@ namespace ThemeOptions
         private static readonly ILogger logger = LogManager.GetLogger();
         private static readonly string PluginFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public static IPlayniteAPI PlayniteAPI { get; private set; }
-        public static string ThemesPath { get; private set; }
 
         public static SettingsViewModel Settings { get; set; }
         public Views.SettingsView SettingsView {get; private set;}
@@ -108,7 +107,6 @@ namespace ThemeOptions
         public ThemeOptions(IPlayniteAPI api) : base(api)
         {
             PlayniteAPI = api;
-            ThemesPath = Path.Combine(PlayniteAPI.Paths.ConfigurationPath,"Themes");
             Settings = new SettingsViewModel(this);
             Properties = new GenericPluginProperties
             {

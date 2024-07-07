@@ -59,15 +59,28 @@ namespace ThemeOptions.Models
         }
         public static IEnumerable<Theme> EnumThemes()
         {
-            foreach (var mode in new List<string> { "Fullscreen", "Desktop" })
+            var themesRoot = new List<string>();
+            if (ThemeOptions.PlayniteAPI.ApplicationInfo.IsPortable)
             {
-                var themesFolder = System.IO.Path.Combine(ThemeOptions.ThemesPath, mode);
-                if (Directory.Exists(themesFolder))
+                themesRoot.Add(ThemeOptions.PlayniteAPI.Paths.ConfigurationPath);
+            }
+
+            themesRoot.AddMissing(ThemeOptions.PlayniteAPI.Paths.ApplicationPath);
+
+            var modes = new List<string> { "Fullscreen", "Desktop" };
+
+            foreach (var root in themesRoot)
+            {
+                foreach (var mode in modes)
                 {
-                    foreach (var themePath in Directory.EnumerateDirectories(themesFolder))
+                    var themesFolder = System.IO.Path.Combine(root, "Themes", mode);
+                    if (Directory.Exists(themesFolder))
                     {
-                        Theme theme = Theme.FromFile(System.IO.Path.Combine(themePath, "theme.yaml"));
-                        if (theme != null) yield return theme;
+                        foreach (var themePath in Directory.EnumerateDirectories(themesFolder))
+                        {
+                            Theme theme = Theme.FromFile(System.IO.Path.Combine(themePath, "theme.yaml"));
+                            if (theme != null && theme.Options != null) yield return theme;
+                        }
                     }
                 }
             }

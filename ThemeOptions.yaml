@@ -1,5 +1,11 @@
 AddonId: 'ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef'
 Packages:
+  - Version: 0.9
+    RequiredApiVersion: 6.11.0
+    ReleaseDate: 2024-07-07
+    PackageUrl: https://github.com/ashpynov/ThemeOptions/releases/download/v0.9/ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef_0_9.pext
+    Changelog:
+      - Lookup themes in both User Appdata and installation path (#4)
   - Version: 0.8
     RequiredApiVersion: 6.11.0
     ReleaseDate: 2024-07-07
