@@ -61,10 +61,14 @@ namespace ThemeOptions.Models
         {
             foreach (var mode in new List<string> { "Fullscreen", "Desktop" })
             {
-                foreach (var themePath in Directory.EnumerateDirectories(System.IO.Path.Combine(ThemeOptions.ThemesPath, mode)))
+                var themesFolder = System.IO.Path.Combine(ThemeOptions.ThemesPath, mode);
+                if (Directory.Exists(themesFolder))
                 {
-                    Theme theme = Theme.FromFile(System.IO.Path.Combine(themePath, "theme.yaml"));
-                    if (theme != null) yield return theme;
+                    foreach (var themePath in Directory.EnumerateDirectories(themesFolder))
+                    {
+                        Theme theme = Theme.FromFile(System.IO.Path.Combine(themePath, "theme.yaml"));
+                        if (theme != null) yield return theme;
+                    }
                 }
             }
         }

@@ -51,7 +51,7 @@ namespace ThemeOptions.Views
         public static void Init()
         {
             CurrentTheme = Theme.FromId(ThemeOptions.PlayniteAPI.ApplicationSettings.FullscreenTheme);
-            if (CurrentTheme.Options == null)
+            if (CurrentTheme?.Options == null)
                 return;
 
             EventManager.RegisterClassHandler(
