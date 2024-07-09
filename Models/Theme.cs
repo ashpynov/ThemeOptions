@@ -60,7 +60,7 @@ namespace ThemeOptions.Models
         public static IEnumerable<Theme> EnumThemes()
         {
             var themesRoot = new List<string>();
-            if (ThemeOptions.PlayniteAPI.ApplicationInfo.IsPortable)
+            if (!ThemeOptions.PlayniteAPI.ApplicationInfo.IsPortable)
             {
                 themesRoot.Add(ThemeOptions.PlayniteAPI.Paths.ConfigurationPath);
             }
