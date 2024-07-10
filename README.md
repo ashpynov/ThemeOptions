@@ -169,15 +169,15 @@ Supported list of variables Types:
 - Double, Int32, Duration, TimeSpan (via Slider)
 
 ### Slider customization
-As soon as Slider more complex control to specify Double, Int32, Duration or TimeSpan It is require some additional specification in Vriables.
+As soon as Slider more complex control to specify Double, Int32, Duration or TimeSpan It is require some additional specification in Variables.
 Thus it is require to specify:
 - Min - minimum value
 - Max - maximum value
-- Step - step of values, amout of minimal changes by Left/Right
+- Step - step of values, amount of minimal changes by Left/Right
 - SmallChange (optional) - same as step either Step or Small change had to be defined.
-- LargeChange (optional) - amount of big shange by PageUp/Down or LB/RB, by default it will try to calculate automaticly as 1/10 of range.
+- LargeChange (optional) - amount of big change by PageUp/Down or LB/RB, by default it will try to calculate automatically as 1/10 of range.
 
-Value/format of this parameters had to correcpond to specified type:
+Value/format of this parameters had to corresponds to specified type:
 
 ```yaml
 SampleDoubleValue:
@@ -210,7 +210,6 @@ SampleInt32Value:
         Max: 10
         Step: 1
 ```
-
 
 
 ### Priority of files to be loaded
