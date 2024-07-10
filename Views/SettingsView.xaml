@@ -5,11 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ThemeOptions"
              xmlns:views="clr-namespace:ThemeOptions.Views"
+             xmlns:con="clr-namespace:ThemeOptions.Converters"
              d:DataContext="{d:DesignInstance Type=local:SettingsViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="600">
     <UserControl.Resources>
         <views:VariablePanelItemsDataTemplateSelector x:Key="VariableTemplateSelector"/>
+        <con:DurationToDouble x:Key="DurationToDoubleConverter"/>
+        <con:DurationToString x:Key="DurationToStringConverter"/>
     </UserControl.Resources>
 
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,20,20,20">
@@ -124,6 +127,68 @@
                                         Style="{StaticResource BaseTextBlockStyle}"
                                         Text="{Binding Title}" VerticalAlignment="Center"/>
                                 </CheckBox>
+                            </DockPanel>
+                        </DataTemplate>
+                        <DataTemplate x:Key="SLIDER_PanelTemplate">
+                            <DockPanel LastChildFill="False" Margin="0,0,0,10" MinHeight="30">
+                                <TextBlock Text="{Binding Title}"
+                                           VerticalAlignment="Center"
+                                           Style="{StaticResource BaseTextBlockStyle}"/>
+                                <Button DockPanel.Dock="Right" Margin="10,0,0,0"
+                                    Command="{x:Static views:Commands.ResetToDefault}"
+                                    VerticalAlignment="Center"
+                                    CommandParameter="{Binding}" >
+                                    <TextBlock Text="&#xee0b;" Margin="-3" FontFamily="{DynamicResource FontIcoFont}" />
+                                </Button>
+                                <Slider
+                                            DockPanel.Dock="Right"
+                                            Width="200"
+                                            VerticalAlignment="Center"
+                                            Value="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+                                            Minimum="{Binding Slider.Min}"
+                                            Maximum="{Binding Slider.Max}"
+                                            TickFrequency="{Binding Slider.SmallChange}"
+                                            SmallChange="{Binding Slider.SmallChange}"
+                                            LargeChange="{Binding Slider.LargeChange}"
+                                            IsSnapToTickEnabled="True"
+                                />
+                                <TextBlock
+                                            DockPanel.Dock="Right"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Value}"
+                                            Margin="0,0,10,0"
+                                            Style="{StaticResource BaseTextBlockStyle}"/>
+                            </DockPanel>
+                        </DataTemplate>
+                        <DataTemplate x:Key="DURATION_PanelTemplate">
+                            <DockPanel LastChildFill="False" Margin="0,0,0,10" MinHeight="30">
+                                <TextBlock Text="{Binding Title}"
+                                           VerticalAlignment="Center"
+                                           Style="{StaticResource BaseTextBlockStyle}"/>
+                                <Button DockPanel.Dock="Right" Margin="10,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Command="{x:Static views:Commands.ResetToDefault}"
+                                    CommandParameter="{Binding}" >
+                                    <TextBlock Text="&#xee0b;" Margin="-3" FontFamily="{DynamicResource FontIcoFont}" />
+                                </Button>
+                                <Slider
+                                            DockPanel.Dock="Right"
+                                            Width="200"
+                                            VerticalAlignment="Center"
+                                            Value="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DurationToDoubleConverter}}"
+                                            Minimum="{Binding Slider.Min}"
+                                            Maximum="{Binding Slider.Max}"
+                                            TickFrequency="{Binding Slider.SmallChange}"
+                                            SmallChange="{Binding Slider.SmallChange}"
+                                            LargeChange="{Binding Slider.LargeChange}"
+                                            IsSnapToTickEnabled="True"
+                                />
+                                <TextBlock
+                                            VerticalAlignment="Center"
+                                            DockPanel.Dock="Right"
+                                            Text="{Binding Value, Converter={StaticResource DurationToStringConverter}}"
+                                            Margin="0,0,10,0"
+                                            Style="{StaticResource BaseTextBlockStyle}"/>
                             </DockPanel>
                         </DataTemplate>
                     </ItemsControl.Resources>

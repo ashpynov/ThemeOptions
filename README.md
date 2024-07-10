@@ -150,6 +150,8 @@ Currently types are supported:
 - Int32
 - Color
 - Thickness
+- Duration
+- TimeSpan
 
 ### Custom user settings
 
@@ -164,6 +166,51 @@ User will be able to specify valuse on user settings page.
 Supported list of variables Types:
 - String (via TextBox)
 - Boolean (via CheckBox)
+- Double, Int32, Duration, TimeSpan (via Slider)
+
+### Slider customization
+As soon as Slider more complex control to specify Double, Int32, Duration or TimeSpan It is require some additional specification in Vriables.
+Thus it is require to specify:
+- Min - minimum value
+- Max - maximum value
+- Step - step of values, amout of minimal changes by Left/Right
+- SmallChange (optional) - same as step either Step or Small change had to be defined.
+- LargeChange (optional) - amount of big shange by PageUp/Down or LB/RB, by default it will try to calculate automaticly as 1/10 of range.
+
+Value/format of this parameters had to correcpond to specified type:
+
+```yaml
+SampleDoubleValue:
+    Title: Double value Sample
+    Type: Double
+    Default: 0.5
+    Slider:
+        Min: 0
+        Max: 2
+        Step: 0.1
+```
+```yaml
+SampleDurationValue:
+    Title: Duration value Sample
+    Type: Duration
+    Default: "00:00:00.5"
+    Slider:
+        Min: "00:00:00.1"
+        Max: "00:01:00"
+        Step: "00.1"
+        LargeChange: "00:00:01"
+```
+```yaml
+SampleInt32Value:
+    Title: Int value Sample
+    Type: Int32
+    Default: 5
+    Slider:
+        Min: 0
+        Max: 10
+        Step: 1
+```
+
 
 
 ### Priority of files to be loaded

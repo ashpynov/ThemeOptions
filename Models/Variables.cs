@@ -60,6 +60,7 @@ namespace ThemeOptions.Models
                  || v.Value.Type == "Boolean"
                  || v.Value.Type == "Int32"
                  || v.Value.Type == "Double"
+                 || v.Value.Type == "TimeSpan"
                 )
                 {
                     items.Add($"<sys:{v.Value.Type} x:Key=\"{v.Key}\">{v.Value.Value}</sys:{v.Value.Type}>");
@@ -68,6 +69,7 @@ namespace ThemeOptions.Models
                 else if (
                     v.Value.Type == "Color"
                  || v.Value.Type == "Thickness"
+                 || v.Value.Type == "Duration"
                 )
                 {
                     items.Add($"<{v.Value.Type} x:Key=\"{v.Key}\">{v.Value.Value}</{v.Value.Type}>");

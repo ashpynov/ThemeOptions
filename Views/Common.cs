@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 
 using Playnite.SDK;
@@ -19,7 +20,20 @@ namespace ThemeOptions.Views
             {
                 try
                 {
-                    return element.FindResource((item as Variable).Type.ToUpper() + "_PanelTemplate") as DataTemplate;
+                    var variable = item as Variable;
+                    var type = variable.Type.ToUpper();
+                    if (new List<string>{ "DOUBLE", "INT32" }.Contains(type) && variable.Slider != null)
+                    {
+                        return element.FindResource("SLIDER_PanelTemplate") as DataTemplate;
+                    }
+                    else if (new List<string>{ "DURATION", "TIMESPAN" }.Contains(type) && variable.Slider != null)
+                    {
+                        return element.FindResource("DURATION_PanelTemplate") as DataTemplate;
+                    }
+                    else
+                    {
+                        return element.FindResource(type + "_PanelTemplate") as DataTemplate;
+                    }
                 }
                 catch
                 {
