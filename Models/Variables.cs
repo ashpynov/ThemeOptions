@@ -74,6 +74,12 @@ namespace ThemeOptions.Models
                 {
                     items.Add($"<{v.Value.Type} x:Key=\"{v.Key}\">{v.Value.Value}</{v.Value.Type}>");
                 }
+                else if (
+                    v.Value.Type == "SolidColorBrush"
+                )
+                {
+                    items.Add($"<{v.Value.Type} x:Key=\"{v.Key}\" Color=\"{v.Value.Value}\" />");
+                }
             }
 
             return "<ResourceDictionary "

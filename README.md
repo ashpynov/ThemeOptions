@@ -67,11 +67,11 @@ Presets:
                     - <relative path to additional xaml file>
                     - <relative path to additional xaml file>
                 Constants:
-                    <constant_ke_1_>:
-                        Type: <type String|Boolean|Double|Int32|Color|Thickness>
+                    <constant_key_1>:
+                        Type: <type String|Boolean|Double|Int32|Color|Thickness|SolidColorBrush>
                         Value: <value>
                     <constant_key_2>:
-                        Type: <type String|Boolean|Double|Int32|Color|Thickness>
+                        Type: <type String|Boolean|Double|Int32|Color|Thickness|SolidColorBrush>
                         Value: <value>
     <preset_group_id_2>:
         Name: <Group 2 User friendly name>
@@ -152,6 +152,7 @@ Currently types are supported:
 - Thickness
 - Duration
 - TimeSpan
+- SolidColorBrush (color)
 
 ### Custom user settings
 
