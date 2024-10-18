@@ -1,5 +1,11 @@
 AddonId: 'ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef'
 Packages:
+  - Version: 0.13
+    RequiredApiVersion: 6.11.0
+    ReleaseDate: 2024-10-18
+    PackageUrl: https://github.com/ashpynov/ThemeOptions/releases/download/v0.13/ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef_0_13.pext
+    Changelog:
+      - Added CornerRadius support
   - Version: 0.12
     RequiredApiVersion: 6.11.0
     ReleaseDate: 2024-09-26

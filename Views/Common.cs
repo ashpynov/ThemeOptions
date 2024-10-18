@@ -22,7 +22,7 @@ namespace ThemeOptions.Views
                 {
                     var variable = item as Variable;
                     var type = variable.Type.ToUpper();
-                    if (new List<string>{ "DOUBLE", "INT32" }.Contains(type) && variable.Slider != null)
+                    if (new List<string>{ "DOUBLE", "INT32","CORNERRADIUS" }.Contains(type) && variable.Slider != null)
                     {
                         return element.FindResource("SLIDER_PanelTemplate") as DataTemplate;
                     }

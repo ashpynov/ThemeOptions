@@ -70,6 +70,7 @@ namespace ThemeOptions.Models
                     v.Value.Type == "Color"
                  || v.Value.Type == "Thickness"
                  || v.Value.Type == "Duration"
+                 || v.Value.Type == "CornerRadius"
                 )
                 {
                     items.Add($"<{v.Value.Type} x:Key=\"{v.Key}\">{v.Value.Value}</{v.Value.Type}>");

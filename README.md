@@ -152,6 +152,7 @@ Currently types are supported:
 - Thickness
 - Duration
 - TimeSpan
+- CornerRadius
 - SolidColorBrush (color)
 
 ### Custom user settings
@@ -170,7 +171,7 @@ Supported list of variables Types:
 - Double, Int32, Duration, TimeSpan (via Slider)
 
 ### Slider customization
-As soon as Slider more complex control to specify Double, Int32, Duration or TimeSpan It is require some additional specification in Variables.
+As soon as Slider more complex control to specify Double, Int32, Duration, CornerRadius or TimeSpan It is require some additional specification in Variables.
 Thus it is require to specify:
 - Min - minimum value
 - Max - maximum value
