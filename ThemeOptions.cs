@@ -93,6 +93,7 @@ namespace ThemeOptions
                     try
                     {
                         var settingsText = themeSettings.FormatResourceDictionary();
+                        logger.Debug("FormatResourceDictionary:\n" + settingsText);
                         ResourceDictionary resource = (ResourceDictionary)XamlReader.Parse(settingsText);
                         Application.Current.Resources.MergedDictionaries.Add(resource);
                     }

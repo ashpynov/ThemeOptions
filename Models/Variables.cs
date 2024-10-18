@@ -85,9 +85,9 @@ namespace ThemeOptions.Models
 
             return "<ResourceDictionary "
                 + string.Join("\n    ", nss)
-                + " >\n"
+                + " >\n    "
                 + string.Join("\n    ", items)
-                + "</ResourceDictionary>\n";
+                + "\n</ResourceDictionary>\n";
         }
     }
 }
