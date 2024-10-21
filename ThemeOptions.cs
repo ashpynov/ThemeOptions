@@ -12,6 +12,7 @@ using Playnite.SDK.Data;
 
 using ThemeOptions.Models;
 using ThemeOptions.Views;
+using ThemeOptions.Controls;
 
 
 namespace ThemeOptions
@@ -125,6 +126,13 @@ namespace ThemeOptions
                 SourceName = "ThemeOptions",
                 SettingsRoot = $"{nameof(Settings)}.{nameof(Settings.Settings)}"
             });
+
+
+            AddCustomElementSupport(new AddCustomElementSupportArgs
+            {
+                SourceName = "ThemeOptions",
+                ElementList = new List<string> { "Command" }
+            });
         }
 
         public Options FromFile(string optionsFile)
@@ -152,6 +160,21 @@ namespace ThemeOptions
             if (SettingsView == null)
                 SettingsView = new Views.SettingsView();
             return SettingsView as UserControl;
+        }
+
+        public override Control GetGameViewControl(GetGameViewControlArgs args)
+        {
+            var strArgs = args.Name.Split('_');
+
+            var controlType = strArgs[0];
+
+            switch (controlType)
+            {
+                case "Command":
+                    return new CommandControl();
+                default:
+                    throw new ArgumentException($"Unrecognized controlType '{controlType}' for request '{args.Name}'");
+            }
         }
     }
 }
