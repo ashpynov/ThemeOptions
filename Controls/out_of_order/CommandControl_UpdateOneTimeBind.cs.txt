@@ -1,0 +1,129 @@
+
+using Playnite.SDK;
+using Playnite.SDK.Controls;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Dynamic;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Media.Animation;
+using Behaviors = Microsoft.Xaml.Behaviors;
+
+namespace ThemeOptions.Controls
+{
+
+    public partial class CommandControl
+    {
+        public RelayCommand<object> UpdateOneTimeBind => new RelayCommand<object>((o) => UpdateOneTimeBindCommand(o));
+
+        public class CustomTarget
+        {
+            static public bool TryParse(string value, out CustomTarget result)
+            {
+                result = null;
+                if (string.IsNullOrEmpty(value))
+                {
+                    return false;
+                }
+
+                var regex = new Regex(@"\[\s*(?<CommandName>\w+)(?:\s+ElementName\s*=\s*(?<ElementName>\w+))?(?:,\s*Property\s*=\s*(?<Property>\w+))?\s*\]");
+                var match = regex.Match(value);
+                if (match.Success && match.Groups["CommandName"].Value == "Target")
+                {
+                    result = new CustomTarget(
+                        match.Groups["ElementName"].Value,
+                        match.Groups["Property"].Value
+                    );
+                    return true;
+                }
+                return false;
+            }
+            public string ElementName;
+            public string Property;
+
+            public CustomTarget(string elementName, string property)
+            {
+                ElementName = elementName;
+                Property = property;
+            }
+        }
+        private void UpdateOneTimeBindCommand(object o)
+        {
+            if (CustomTarget.TryParse(o as string, out CustomTarget target))
+            {
+                if (FindName(target.ElementName) is DependencyObject element)
+                {
+                    if (element.GetType()
+                        .GetField($"{target.Property}Property", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+                        ?.GetValue(null) is DependencyProperty property)
+                    {
+                        if (BindingOperations.GetBindingExpression(element, property) is BindingExpression binding)
+                        {
+                            var oldBinding = binding.ParentBinding;
+                            if (oldBinding.Mode != BindingMode.OneTime)
+                            {
+                                var newBinding = oldBinding.ElementName is null
+                                    ? new Binding
+                                    {
+                                        Path = oldBinding.Path,
+                                        Source = oldBinding.Source,
+                                        Mode = BindingMode.OneTime,
+                                        UpdateSourceTrigger = oldBinding.UpdateSourceTrigger,
+                                        Converter = oldBinding.Converter,
+                                        ConverterParameter = oldBinding.ConverterParameter,
+                                        ConverterCulture = oldBinding.ConverterCulture,
+                                        StringFormat = oldBinding.StringFormat,
+                                        TargetNullValue = oldBinding.TargetNullValue,
+                                        FallbackValue = oldBinding.FallbackValue
+                                    }
+                                    : new Binding
+                                    {
+                                        Path = oldBinding.Path,
+                                        ElementName = oldBinding.ElementName,
+                                        Mode = BindingMode.OneTime,
+                                        UpdateSourceTrigger = oldBinding.UpdateSourceTrigger,
+                                        Converter = oldBinding.Converter,
+                                        ConverterParameter = oldBinding.ConverterParameter,
+                                        ConverterCulture = oldBinding.ConverterCulture,
+                                        StringFormat = oldBinding.StringFormat,
+                                        TargetNullValue = oldBinding.TargetNullValue,
+                                        FallbackValue = oldBinding.FallbackValue
+                                    };
+
+                                // Apply the new binding
+                                BindingOperations.SetBinding(element, property, newBinding);
+                            }
+                            else
+                            {
+                                binding.UpdateTarget();
+                            }
+                        }
+                        else
+                        {
+                            Logger.Error($"No Binging expression for Element '{target.ElementName}' property '{target.Property}'");
+                        }
+                    }
+                    else
+                    {
+                        Logger.Error($"No Property '{target.Property}' for Element '{target.ElementName}' ");
+                    }
+                }
+                else
+                {
+                    Logger.Error($"Element '{target.ElementName}' was not found");
+                }
+            }
+            else
+            {
+                Logger.Error($"UpdateOneTimeBind CommandParameter should match format: [Target ElementName=element_x_name, Property=property_name]");
+            }
+        }
+
+    }
+}

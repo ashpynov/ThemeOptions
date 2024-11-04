@@ -6,7 +6,6 @@
              xmlns:local="clr-namespace:ThemeOptions"
              xmlns:views="clr-namespace:ThemeOptions.Views"
              xmlns:con="clr-namespace:ThemeOptions.Converters"
-             d:DataContext="{d:DesignInstance Type=local:SettingsViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="600">
     <UserControl.Resources>

@@ -1,0 +1,34 @@
+
+using Playnite.SDK;
+using System.Windows;
+using System.Windows.Controls;
+
+namespace ThemeOptions.Controls
+{
+
+    public partial class CommandControl
+    {
+        public static readonly RoutedEvent ThemeOptions_CommandEvent = EventManager.RegisterRoutedEvent(
+            "ThemeOptions_Command", RoutingStrategy.Direct, typeof(RoutedEventHandler), typeof(CommandControl));
+
+        public event RoutedEventHandler ThemeOptions_Command
+        {
+            add { AddHandler(ThemeOptions_CommandEvent, value); }
+            remove { RemoveHandler(ThemeOptions_CommandEvent, value); }
+        }
+
+        public void RaiseThemeOptions_CommandEvent(Control targetControl)
+        {
+            RoutedEventArgs newEventArgs = new RoutedEventArgs(ThemeOptions_CommandEvent, targetControl );
+            RaiseEvent(newEventArgs);
+        }
+
+        public RelayCommand<object> SendEvent => new RelayCommand<object>(o =>
+        {
+            if (((o as Control) ?? FindName(o as string)) is Control control )
+            {
+                RaiseThemeOptions_CommandEvent(control);
+            }
+        });
+    }
+}

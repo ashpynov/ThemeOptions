@@ -1,0 +1,27 @@
+
+using Playnite.SDK;
+using System.Linq;
+using System.Reflection;
+using System.Windows;
+using Behaviors = Microsoft.Xaml.Behaviors;
+
+namespace ThemeOptions.Controls
+{
+
+    public partial class CommandControl
+    {
+        public RelayCommand<object> TriggerActions => new RelayCommand<object>((o) =>
+        {
+            if (o is Behaviors.TriggerAction[] actions)
+            {
+                foreach( var a in actions.ToArray())
+                {
+                    a.Attach(FindName("ThemeOptions_Command") as DependencyObject);
+                    MethodInfo CallInvokeMethod = a.GetType().GetMethod("Invoke", BindingFlags.NonPublic | BindingFlags.Instance);
+                    CallInvokeMethod.Invoke(a, new object[] {a}); // This will call the internal method
+                    a.Detach();
+                }
+            }
+        });
+    }
+}
