@@ -3,9 +3,10 @@ Packages:
   - Version: 0.14
     RequiredApiVersion: 6.11.0
     ReleaseDate: 2024-11-09
-    PackageUrl: https://github.com/ashpynov/ThemeOptions/releases/download/v0.13/ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef_0_13.pext
+    PackageUrl: https://github.com/ashpynov/ThemeOptions/releases/download/v0.14/ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef_0_14.pext
     Changelog:
       - Added commands may be required for themes implementation.
+      - Republished
   - Version: 0.13
     RequiredApiVersion: 6.11.0
     ReleaseDate: 2024-10-18
