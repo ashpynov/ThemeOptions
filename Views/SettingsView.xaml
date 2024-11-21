@@ -14,8 +14,8 @@
         <con:DurationToString x:Key="DurationToStringConverter"/>
     </UserControl.Resources>
 
-    <ScrollViewer Style="{DynamicResource ThemeOptionsSettingsScrollViewerStyle}" Focusable="False">
-    
+    <ScrollViewer Focusable="False">
+
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,20,20,20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="600"/>
