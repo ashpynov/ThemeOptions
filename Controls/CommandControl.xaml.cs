@@ -1,6 +1,5 @@
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -33,17 +32,19 @@ namespace ThemeOptions.Controls
         public bool IsActive
         {
             get => isActive;
-            set
-            {
-                isActive = value;
-                OnPropertyChanged();
-            }
+            set => SetValue(ref isActive, value);
         }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        protected void SetValue<T>(ref T property, T value, [CallerMemberName] string propertyName = null)
+        {
+            property = value;
+            OnPropertyChanged(propertyName);
         }
     }
 }
