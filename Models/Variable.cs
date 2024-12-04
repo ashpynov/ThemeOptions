@@ -6,6 +6,8 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Automation;
 using Playnite.SDK.Data;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace ThemeOptions.Models
 {
@@ -77,5 +79,17 @@ namespace ThemeOptions.Models
         public string Preview{ get; set; }
         [DontSerialize]
         public Slider Slider { get; set; }
+
+        [DontSerialize]
+        public string TitleStyle { get; set; }
+
+        [DontSerialize]
+        public string Style { get; set; }
+
+        [DontSerialize]
+        public Style TextBlockStyle { get => Application.Current.FindResource(TitleStyle) as Style; }
+
+        [DontSerialize]
+        public Style DockPanelStyle { get => Style != null ? Application.Current.FindResource(Style) as Style : null ?? new Style(typeof(DockPanel)); }
     }
 }

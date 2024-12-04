@@ -102,6 +102,9 @@
                     ItemsSource="{Binding ElementName=SelectedTheme, Path=SelectedItem.VariablesList}"
                     ItemTemplateSelector="{StaticResource VariableTemplateSelector}">
                     <ItemsControl.Resources>
+                        <DataTemplate x:Key="HEADER_PanelTemplate">
+                            <TextBlock Margin="-20,10,0,10" Text="{Binding Title}" Style="{StaticResource BaseTextBlockStyle}" />
+                        </DataTemplate>
                         <DataTemplate x:Key="STRING_PanelTemplate">
                             <DockPanel Margin="0,0,0,10" MinHeight="30">
                                 <Button DockPanel.Dock="Right" Margin="10,0,0,0"

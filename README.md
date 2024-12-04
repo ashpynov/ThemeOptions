@@ -299,3 +299,50 @@ and data template to specify content template:
         </DockPanel>
     </DataTemplate>
 ```
+
+### Variables grouping
+
+You may visually group variables options. To do so Add 'Header' type variable in theme options:
+
+```yaml
+Variables:
+    UserName:
+        Title: User name
+        Type: String
+        Default:
+    SomeHeader:
+        Title: This is header
+        Type: Header
+        TitleStyle: SettingsSectionHeaderText
+        Style: SettingsSectionHeaderDockPanelStyle
+    TopButtonAlwaysVisible:
+        Title: Topbar is always visible
+        Type: Boolean
+        Default: True
+        Style: SettingsSectionOffsetDockPanelStyle
+```
+
+Also you may specify name of Style to be used for DockPanel hosted each option as 'Style' parameter and/or Stile of TextBlock to specify style of header title.
+This styles will help you to organize items offsets
+
+```xml
+    <Style x:Key="SettingsSectionHeaderText" TargetType="TextBlock" BasedOn="{StaticResource TextBlockBaseStyle}">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="40" />
+    </Style>
+
+    <Style x:Key="SettingsSectionHeaderDockPanelStyle" TargetType="DockPanel">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0,0,0,0" />
+    </Style>
+
+    <Style x:Key="SettingsSectionOffsetDockPanelStyle" TargetType="DockPanel">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="30,0,0,0" />
+    </Style>
+```
+
+Note: please be aware of TargetType value.
+
