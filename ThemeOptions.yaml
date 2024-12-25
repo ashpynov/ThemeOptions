@@ -1,5 +1,11 @@
 AddonId: 'ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef'
 Packages:
+  - Version: 0.17
+    RequiredApiVersion: 6.11.0
+    ReleaseDate: 2024-12-25
+    PackageUrl: https://github.com/ashpynov/ThemeOptions/releases/download/v0.17/ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef_0_17.pext
+    Changelog:
+      - Short / Long press gamepad binding support
   - Version: 0.16
     RequiredApiVersion: 6.11.0
     ReleaseDate: 2024-12-04
