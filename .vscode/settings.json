@@ -1,0 +1,25 @@
+{
+    "logViewer.watch": [
+        "c:\\tools\\playnite\\*.log"
+    ],
+    "dotnetAcquisitionExtension.enableTelemetry": false,
+    "dotnetAcquisitionExtension.enablePreviewFeatures": true,
+    "omnisharp.useModernNet": false,
+    "csharp.inlayHints.enableInlayHintsForImplicitObjectCreation": false,
+    "csharp.inlayHints.enableInlayHintsForImplicitVariableTypes": false,
+    "csharp.inlayHints.enableInlayHintsForLambdaParameterTypes": false,
+    "csharp.inlayHints.enableInlayHintsForTypes": false,
+    "dotnet.inlayHints.enableInlayHintsForIndexerParameters": true,
+    "dotnet.inlayHints.enableInlayHintsForLiteralParameters": true,
+    "dotnet.inlayHints.enableInlayHintsForObjectCreationParameters": true,
+    "dotnet.inlayHints.enableInlayHintsForOtherParameters": true,
+    "dotnet.inlayHints.enableInlayHintsForParameters": true,
+    "dotnet.inlayHints.suppressInlayHintsForParametersThatDifferOnlyBySuffix": false,
+    "csharp.debug.justMyCode": false,
+    "csharp.debug.logging.diagnosticsLog.debugEngineAPITracing": "all",
+    "csharp.debug.logging.diagnosticsLog.debugRuntimeEventTracing": true,
+    "csharp.debug.symbolOptions.searchMicrosoftSymbolServer": false,
+    "csharp.debug.symbolOptions.searchNuGetOrgSymbolServer": false,
+    "dotnet.typeMembers.propertyGenerationBehavior": "preferAutoProperties",
+    "dotnet-test-explorer.testProjectPath": "**/*Tests.csproj"
+}

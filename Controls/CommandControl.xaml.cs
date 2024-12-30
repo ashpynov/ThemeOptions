@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using Playnite.SDK;
 using Playnite.SDK.Controls;
+using ThemeOptions.Models;
 
 namespace ThemeOptions.Controls
 {
@@ -35,6 +36,7 @@ namespace ThemeOptions.Controls
             set => SetValue(ref isActive, value);
         }
 
+        public DynamicProperties Options { get => ThemeOptions.Settings.Settings.Options; }
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)

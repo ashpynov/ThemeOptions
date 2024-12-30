@@ -32,8 +32,15 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
+
     <ItemGroup>
-        <Page Remove="Views\FulscreenSettingsViewTemplate.xaml" />
+        <Compile Remove="Tests\**" />
+        <Content Remove="Tests\**" />
+        <Page Remove="Tests\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Page Remove="**\Views\FulscreenSettingsViewTemplate.xaml" />
     </ItemGroup>
     <ItemGroup>
         <None Include="icon.png">

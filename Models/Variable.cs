@@ -87,7 +87,7 @@ namespace ThemeOptions.Models
         public string Style { get; set; }
 
         [DontSerialize]
-        public Style TextBlockStyle { get => Application.Current.FindResource(TitleStyle) as Style; }
+        public Style TextBlockStyle { get => Application.Current.FindResource(TitleStyle ?? "SettingsSectionText") as Style; }
 
         [DontSerialize]
         public Style DockPanelStyle { get => Style != null ? Application.Current.FindResource(Style) as Style : null ?? new Style(typeof(DockPanel)); }

@@ -13,6 +13,7 @@ using Playnite.SDK.Data;
 using ThemeOptions.Models;
 using ThemeOptions.Views;
 using ThemeOptions.Controls;
+using Playnite.SDK.Events;
 
 
 namespace ThemeOptions
@@ -25,6 +26,8 @@ namespace ThemeOptions
 
         public static SettingsViewModel Settings { get; set; }
         public Views.SettingsView SettingsView {get; private set;}
+
+        public string CurrentThemeId;
 
         public override Guid Id { get; } = Guid.Parse("904cbf3b-573f-48f8-9642-0a09d05c64ef");
 
@@ -57,12 +60,7 @@ namespace ThemeOptions
         }
         public void LoadThemeOption()
         {
-            string themeId =
-                PlayniteAPI.ApplicationInfo.Mode == ApplicationMode.Fullscreen
-                    ? PlayniteAPI.ApplicationSettings.FullscreenTheme
-                    : PlayniteAPI.ApplicationSettings.DesktopTheme;
-
-            Theme theme = Theme.FromId(themeId);
+            Theme theme = Theme.FromId(CurrentThemeId);
             if (theme == null) return;
 
             if (theme.Options?.Presets?.Count > 0)
@@ -109,6 +107,11 @@ namespace ThemeOptions
         public ThemeOptions(IPlayniteAPI api) : base(api)
         {
             PlayniteAPI = api;
+            CurrentThemeId =
+                PlayniteAPI.ApplicationInfo.Mode == ApplicationMode.Fullscreen
+                    ? PlayniteAPI.ApplicationSettings.FullscreenTheme
+                    : PlayniteAPI.ApplicationSettings.DesktopTheme;
+
             Settings = new SettingsViewModel(this);
             Properties = new GenericPluginProperties
             {
@@ -175,6 +178,12 @@ namespace ThemeOptions
                 default:
                     throw new ArgumentException($"Unrecognized controlType '{controlType}' for request '{args.Name}'");
             }
+        }
+
+        public override void OnApplicationStopped(OnApplicationStoppedEventArgs args)
+        {
+            Settings.Settings.OptionsToTheme(CurrentThemeId);
+            SavePluginSettings(Settings.Settings);
         }
     }
 }

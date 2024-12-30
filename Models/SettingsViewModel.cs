@@ -5,6 +5,7 @@ using System.ComponentModel;
 
 using Playnite.SDK;
 using Playnite.SDK.Data;
+using System;
 
 namespace ThemeOptions.Models
 {
@@ -29,7 +30,23 @@ namespace ThemeOptions.Models
 
         public ThemesSettings UserSettings { get => userSettings; }
 
+        [DontSerialize]
+        public DynamicProperties Options { get; } = new DynamicProperties();
+
         public bool IsInstalled { get => true; }
+
+
+        public void ThemeToOptions(string themeId)
+        {
+            VariablesValues themeValues = UserSettings.Get(themeId, new VariablesValues());
+            Options.Update(themeValues);
+        }
+
+        public void OptionsToTheme(string themeId)
+        {
+            VariablesValues themeValues = UserSettings.Get(themeId, new VariablesValues());
+            UserSettings[themeId] = themeValues.FromDynamicProperties(Options, updateOnly: true);
+        }
     }
 
     public class SettingsViewModel : ObservableObject, ISettings, INotifyPropertyChanged
@@ -105,7 +122,15 @@ namespace ThemeOptions.Models
             {
                 Settings = new Settings();
             }
+
+            Settings.ThemeToOptions(plugin.CurrentThemeId);
+            Settings.Options.PropertyChanged += (o, e) =>
+            {
+                Settings.OnPropertyChanged("Options");
+            };
         }
+
+
 
         public Options SelectedThemeOptions = null;
 
@@ -170,21 +195,19 @@ namespace ThemeOptions.Models
                 }
             }
 
-            string currentTheme =
-                ThemeOptions.PlayniteAPI.ApplicationInfo.Mode == ApplicationMode.Desktop
-                ? ThemeOptions.PlayniteAPI.ApplicationSettings.DesktopTheme
-                : ThemeOptions.PlayniteAPI.ApplicationSettings.FullscreenTheme;
+            string currentTheme = plugin.CurrentThemeId;
 
             Settings updated = Serialization.GetClone(settings);
 
-            var presetsEqual = Serialization.AreObjectsEqual(original.SelectedPresets.Get(currentTheme), updated.SelectedPresets.Get(currentTheme));
-            var variablesEqual = Serialization.AreObjectsEqual(original.UserSettings.Get(currentTheme), updated.UserSettings.Get(currentTheme));
+            var presetsEqual = Serialization.AreObjectsEqual(original.SelectedPresets.Get(plugin.CurrentThemeId), updated.SelectedPresets.Get(plugin.CurrentThemeId));
+            var variablesEqual = Serialization.AreObjectsEqual(original.UserSettings.Get(plugin.CurrentThemeId), updated.UserSettings.Get(plugin.CurrentThemeId));
             return  !presetsEqual || !variablesEqual;
        }
 
         public void BeginEdit()
         {
             LoadCustomizableThemes();
+            Settings.OptionsToTheme(plugin.CurrentThemeId);
             LoadFromSettings(Settings, CustomizableThemes);
         }
 
@@ -192,6 +215,8 @@ namespace ThemeOptions.Models
         {
             SelectedTheme = Theme.FromId(themeId);
             CustomizableThemes = new List<Theme> { SelectedTheme };
+
+            Settings.OptionsToTheme(plugin.CurrentThemeId);
             LoadFromSettings(Settings, CustomizableThemes);
         }
 
@@ -203,6 +228,7 @@ namespace ThemeOptions.Models
         {
             bool needRestart = SaveToSettings(CustomizableThemes, Settings);
             plugin.SavePluginSettings(Settings);
+            Settings.ThemeToOptions(plugin.CurrentThemeId);
 
             if (needRestart)
             {

@@ -15,6 +15,8 @@
         <views:VariablePanelItemsDataTemplateSelector x:Key="VariableTemplateSelector"/>
         <con:DurationToDouble x:Key="DurationToDoubleConverter"/>
         <con:DurationToString x:Key="DurationToStringConverter"/>
+        <con:VisibilityToBooleanConverter x:Key="VisibilityToBooleanConverter" />
+
         <Style TargetType="pctrls:CheckBoxEx" BasedOn="{StaticResource SettingsSectionCheckbox}" />
         <Style TargetType="pctrls:ComboBoxEx" BasedOn="{StaticResource SettingsSectionCombobox}" />
         <Style TargetType="TextBlock" BasedOn="{StaticResource SettingsSectionText}" />
@@ -172,6 +174,17 @@
                                     </pctrls:CheckBoxEx>
                                 </DockPanel>
                             </DataTemplate>
+                            <DataTemplate x:Key="VISIBILITY_PanelTemplate">
+                                <DockPanel LastChildFill="True" Style="{Binding DockPanelStyle}">
+                                    <pctrls:CheckBoxEx
+                                        Style="{StaticResource SettingsSectionCheckbox}"
+                                        Content="{Binding Title}"
+                                        VerticalAlignment="Center"
+                                        IsChecked="{Binding Value, Converter={StaticResource VisibilityToBooleanConverter}}"
+                                        DockPanel.Dock="Left" >
+                                    </pctrls:CheckBoxEx>
+                                </DockPanel>
+                            </DataTemplate>
                             <DataTemplate x:Key="SLIDER_PanelTemplate">
                                 <DockPanel LastChildFill="False" Style="{Binding DockPanelStyle}">
                                     <TextBlock Text="{Binding Title}"
@@ -218,6 +231,7 @@
                                                 Style="{StaticResource SettingsSectionText}"/>
                                 </DockPanel>
                             </DataTemplate>
+
                         </ItemsControl.Resources>
                     </ItemsControl>
                 </StackPanel>

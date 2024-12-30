@@ -1,0 +1,58 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build debug",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary;ForceNoAlign"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "build tests",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/Tests/Tests.csproj"
+            ],
+            "problemMatcher": "$msCompile",
+
+        },
+        {
+            "label": "build release",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary;ForceNoAlign",
+                "-c",
+                "Release"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "pack",
+            "command": "C:\\Tools\\Playnite\\Toolbox.exe",
+            "type": "process",
+            "args": [
+                "pack",
+                "${workspaceFolder}\\bin\\Release\\net4.6.2",
+                "${workspaceFolder}\\bin\\Package"
+            ],
+            "problemMatcher": "$msCompile",
+            "dependsOn": [
+                "build release"
+            ]
+        }
+    ]
+}

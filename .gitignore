@@ -1,7 +1,8 @@
 /.vs
-/.vscode
 /bin
 /obj
 /packages
 Properties/launchSettings.json
 /.idea
+Tests/bin/
+Tests/obj/
