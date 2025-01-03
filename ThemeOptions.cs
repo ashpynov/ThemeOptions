@@ -14,6 +14,8 @@ using ThemeOptions.Models;
 using ThemeOptions.Views;
 using ThemeOptions.Controls;
 using Playnite.SDK.Events;
+using System.Linq;
+using System.Windows.Documents;
 
 
 namespace ThemeOptions
@@ -21,6 +23,8 @@ namespace ThemeOptions
     public class ThemeOptions: GenericPlugin
     {
         private static readonly ILogger logger = LogManager.GetLogger();
+
+        public static string PluginVersion;
         private static readonly string PluginFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public static IPlayniteAPI PlayniteAPI { get; private set; }
 

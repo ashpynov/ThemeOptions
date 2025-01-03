@@ -25,6 +25,26 @@ If you may not use Ko-Fi in you country, it should not stop you! On [boosty](htt
 
 Extension does not modify any existing theme files. Instead it load additional resources files on start and generate additional resources in memory. Thats if the extension will be disabled - all effects removed. This means that themes have to be designed the way to be fully functional in theit 'default' view if extension disabled - all used resources with default values should be declared in scope of native theme files like 'contants.xaml'. And modded resources should override existing ones by theme options extension.
 
+## 'Live' theme options
+Since version bindable options and life update are supported
+So instead of reffer to xaml resource you may dirrectly bind you theme settionds using Indexable syntax and pluginSettings Bind:
+
+```xml
+<MultiDataTrigger>
+    <MultiDataTrigger.Conditions>
+        <Condition Binding="{PluginSettings Plugin=ThemeOptions, Path=Options[ShowHelpMenu]}" Value="Collapsed"/>
+    </MultiDataTrigger.Conditions>
+    <Setter Property="Visibility" Value="Collapsed" />
+</MultiDataTrigger>
+
+```
+
+where 'ShoeHelpMenu' is sample of you variables or presets constants name.
+
+Variables may be 'Two way' bind and actual values will be save on Playnite exit. Also you may 'create' variable even without theme options declare. For example to save some custom toggle button state.
+
+And also generated resource during fullscreen editing reloads right after Theme Option settings are closed.
+
 ## Localization
 To support localization - no additional theme manifest required. Just add locales resources into Localization folder in your theme and it will be loaded automaticly (except of en_US - default theme version has to contain default language in native theme files. I recommend constants.xaml). Please refere to Playnite source code, or almost any (including this) extension code for localization resource samples.
 
@@ -33,8 +53,15 @@ To support localization - no additional theme manifest required. Just add locale
 To detect installation status, extension exposed 'IsInstalled' path via PluginSettings with boolean value:
 
 ```xml
-Binding="{PluginSettings Plugin=ThemeOptions, Path=IsInstalled}" Value="True"
+<Condition Binding="{PluginSettings Plugin=ThemeOptions, Path=IsInstalled}" Value="True" />
 ```
+
+Also it may determine if minimal version is greater or equal to required:
+```xml
+<Condition Binding="{PluginSettings Plugin=ThemeOptions, Path=MinimalVersion[0.18]}" Value="True" />
+```
+also string value 'Version' is exposed.
+
 
 ## Structure of theme options manifest file
 To add ability to configure variables and presets - additional theme manifest file is required.

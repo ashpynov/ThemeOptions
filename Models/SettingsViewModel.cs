@@ -6,6 +6,7 @@ using System.ComponentModel;
 using Playnite.SDK;
 using Playnite.SDK.Data;
 using System;
+using Playnite.SDK.Plugins;
 
 namespace ThemeOptions.Models
 {
@@ -32,6 +33,10 @@ namespace ThemeOptions.Models
 
         [DontSerialize]
         public DynamicProperties Options { get; } = new DynamicProperties();
+
+        public MinimalVersion MinimalVersion { get; } = new MinimalVersion();
+
+        public string Version { get => MinimalVersion.PluginVersion; }
 
         public bool IsInstalled { get => true; }
 

@@ -1,5 +1,15 @@
 AddonId: 'ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef'
 Packages:
+  - Version: 0.18
+    RequiredApiVersion: 6.11.0
+    ReleaseDate: 2024-01-03
+    PackageUrl: https://github.com/ashpynov/ThemeOptions/releases/download/v0.18/ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef_0_18.pext
+    Changelog:
+      - New features for theme designers are implemented
+      - "Live theme options reload: theme options applied without reboot as soon as Theme options settings are closed"
+      - "Bindable theme variables: now it is possible to bind theme variables as usual DataSource via {PluginSettings}"
+      - "TwoWay binded variables (even not registered as theme Variables) values are saved on Playnite exit - it may used to save triggers current states"
+      - "Extended theme options version verification"
   - Version: 0.17
     RequiredApiVersion: 6.11.0
     ReleaseDate: 2024-12-25
