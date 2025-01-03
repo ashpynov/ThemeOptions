@@ -67,6 +67,8 @@ namespace ThemeOptions.Models
 
     public class Variable : VariableValue
     {
+        public new string Value { get => base.Value ?? Default; set => base.Value = value; }
+
         [DontSerialize]
         public string Title { get; set; }
         [DontSerialize]

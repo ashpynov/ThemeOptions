@@ -8,6 +8,81 @@ using Playnite.SDK.Data;
 
 namespace Tests.Models
 {
+
+    public class VariableComparer : IEqualityComparer<Variable>
+    {
+        public bool Equals(Variable x, Variable y)
+        {
+            if (x == null || y == null) return false;
+            return
+                x.Type == y.Type &&
+                x.Value == y.Value &&
+                x.Title == y.Title &&
+                x.LocKey == y.LocKey &&
+                x.Default == y.Default &&
+                x.Description == y.Description &&
+                x.Preview == y.Preview &&
+                Equals(x.Slider, y.Slider) &&
+                x.TitleStyle == y.TitleStyle &&
+                x.Style == y.Style;
+        }
+
+        public int GetHashCode(Variable obj)
+        {
+            if (obj == null) return 0;
+            return CombineHashCodes(
+                            obj.Type?.GetHashCode() ?? 0,
+                                    obj.Value?.GetHashCode() ?? 0,
+                                    obj.Title?.GetHashCode() ?? 0,
+                                    obj.LocKey?.GetHashCode() ?? 0,
+                                    obj.Default?.GetHashCode() ?? 0,
+                                    obj.Description?.GetHashCode() ?? 0,
+                                    obj.Preview?.GetHashCode() ?? 0,
+                                    obj.Slider?.GetHashCode() ?? 0,
+                                    obj.TitleStyle?.GetHashCode() ?? 0,
+                                    obj.Style?.GetHashCode() ?? 0);
+        }
+
+        private static int CombineHashCodes(params int[] hashCodes)
+        {
+            int hash = 17;
+            foreach (var code in hashCodes)
+            {
+                hash = hash * 31 + code;
+            }
+            return hash;
+        }
+    }
+
+    public class VariableValueComparer : IEqualityComparer<VariableValue>
+    {
+        public bool Equals(VariableValue x, VariableValue y)
+        {
+            if (x == null || y == null) return false;
+            return
+                x.Type == y.Type &&
+                x.Value == y.Value;
+        }
+
+        public int GetHashCode(VariableValue obj)
+        {
+            if (obj == null) return 0;
+            return CombineHashCodes(
+                            obj.Type?.GetHashCode() ?? 0,
+                                    obj.Value?.GetHashCode() ?? 0);
+        }
+
+        private static int CombineHashCodes(params int[] hashCodes)
+        {
+            int hash = 17;
+            foreach (var code in hashCodes)
+            {
+                hash = hash * 31 + code;
+            }
+            return hash;
+        }
+    }
+
     [TestClass]
     public class VariableValuesSerialization
     {
@@ -79,51 +154,6 @@ namespace Tests.Models
             var resource = values.FormatResourceDictionary();
         }
 
-        public class VariableComparer : IEqualityComparer<Variable>
-        {
-            public bool Equals(Variable x, Variable y)
-            {
-                if (x == null || y == null) return false;
-                return
-                    x.Type == y.Type &&
-                    x.Value == y.Value &&
-                    x.Title == y.Title &&
-                    x.LocKey == y.LocKey &&
-                    x.Default == y.Default &&
-                    x.Description == y.Description &&
-                    x.Preview == y.Preview &&
-                    Equals(x.Slider, y.Slider) &&
-                    x.TitleStyle == y.TitleStyle &&
-                    x.Style == y.Style;
-            }
-
-            public int GetHashCode(Variable obj)
-            {
-                if (obj == null) return 0;
-                return CombineHashCodes(
-                              obj.Type?.GetHashCode() ?? 0,
-                                        obj.Value?.GetHashCode() ?? 0,
-                                        obj.Title?.GetHashCode() ?? 0,
-                                        obj.LocKey?.GetHashCode() ?? 0,
-                                        obj.Default?.GetHashCode() ?? 0,
-                                        obj.Description?.GetHashCode() ?? 0,
-                                        obj.Preview?.GetHashCode() ?? 0,
-                                        obj.Slider?.GetHashCode() ?? 0,
-                                        obj.TitleStyle?.GetHashCode() ?? 0,
-                                        obj.Style?.GetHashCode() ?? 0);
-            }
-
-            private static int CombineHashCodes(params int[] hashCodes)
-            {
-                int hash = 17;
-                foreach (var code in hashCodes)
-                {
-                    hash = hash * 31 + code;
-                }
-                return hash;
-            }
-        }
-
         [TestMethod]
         public void FromDynamicPropertiesTest()
         {
@@ -137,10 +167,10 @@ namespace Tests.Models
 
             foreach (var v in actual)
             {
-                Assert.AreEqual<Variable>(
-                    expected[v.Key] as Variable,
-                    actual[v.Key] as Variable,
-                    comparer: new VariableComparer(),
+                Assert.AreEqual(
+                    expected[v.Key],
+                    actual[v.Key],
+                    comparer: new VariableValueComparer(),
                     message: $"{v.Key} are not equal: expected ({expected[v.Key].Type}:{expected[v.Key].Value}),  actual:({actual[v.Key].Type}:{actual[v.Key].Value})" );
             }
         }
@@ -156,10 +186,10 @@ namespace Tests.Models
 
             foreach (var v in actual)
             {
-                Assert.AreEqual<Variable>(
-                    expected[v.Key] as Variable,
-                    actual[v.Key] as Variable,
-                    comparer: new VariableComparer(),
+                Assert.AreEqual(
+                    expected[v.Key],
+                    actual[v.Key],
+                    comparer: new VariableValueComparer(),
                     message: $"{v.Key} are not equal: expected ({expected[v.Key].Type}:{expected[v.Key].Value}),  actual:({actual[v.Key].Type}:{actual[v.Key].Value})" );
             }
         }

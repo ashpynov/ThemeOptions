@@ -35,20 +35,18 @@
 
     <ItemGroup>
         <Compile Remove="Tests\**" />
-        <Content Remove="Tests\**" />
+        <None Remove="Tests\**" />
         <Page Remove="Tests\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <Page Remove="**\Views\FulscreenSettingsViewTemplate.xaml" />
-    </ItemGroup>
-    <ItemGroup>
         <None Include="icon.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
-        <None Include="Views\FulscreenSettingsViewTemplate.xaml">
-            <Generator></Generator>
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
     </ItemGroup>
+
+    <ItemGroup>
+        <Resource Include="Views\FullscreenSettingsView.xaml" />
+    </ItemGroup>
+
 </Project>

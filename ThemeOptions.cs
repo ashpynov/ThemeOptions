@@ -30,8 +30,9 @@ namespace ThemeOptions
         public string CurrentThemeId;
 
         public override Guid Id { get; } = Guid.Parse("904cbf3b-573f-48f8-9642-0a09d05c64ef");
+        List<ResourceDictionary> themeResources = new List<ResourceDictionary>();
 
-        public void LoadResource(string resourceFile, bool mandatory=true)
+        public ResourceDictionary LoadResource(string resourceFile, bool mandatory=true)
         {
                 if (File.Exists(resourceFile))
                 {
@@ -42,6 +43,7 @@ namespace ThemeOptions
                             ResourceDictionary resource = (ResourceDictionary)XamlReader.Load(stream.BaseStream);
                             resource.Source = new Uri(resourceFile, UriKind.Absolute);
                             Application.Current.Resources.MergedDictionaries.Add(resource);
+                            return resource;
                         }
                     }
                     catch (Exception e)
@@ -57,9 +59,16 @@ namespace ThemeOptions
                 {
                     logger.Info($"Optional file not found {resourceFile}");
                 }
+                return null;
         }
         public void LoadThemeOption()
         {
+            foreach( ResourceDictionary resource in themeResources)
+            {
+                Application.Current.Resources.MergedDictionaries.Remove(resource);
+            }
+            themeResources.Clear();
+
             Theme theme = Theme.FromId(CurrentThemeId);
             if (theme == null) return;
 
@@ -73,7 +82,10 @@ namespace ThemeOptions
                     foreach (var presetResource in theme.Options.Presets.GetResourceFiles(selectedPresets))
                     {
                         logger.Info($"Loading resource {presetResource}");
-                        LoadResource(Path.Combine(theme.Path, presetResource));
+                        if( LoadResource(Path.Combine(theme.Path, presetResource)) is ResourceDictionary resource)
+                        {
+                            themeResources.Add(resource);
+                        }
                     }
                 }
             }
@@ -95,6 +107,7 @@ namespace ThemeOptions
                         logger.Debug("FormatResourceDictionary:\n" + settingsText);
                         ResourceDictionary resource = (ResourceDictionary)XamlReader.Parse(settingsText);
                         Application.Current.Resources.MergedDictionaries.Add(resource);
+                        themeResources.Add(resource);
                     }
                     catch (Exception e)
                     {

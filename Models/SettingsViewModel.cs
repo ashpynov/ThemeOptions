@@ -38,8 +38,14 @@ namespace ThemeOptions.Models
 
         public void ThemeToOptions(string themeId)
         {
-            VariablesValues themeValues = UserSettings.Get(themeId, new VariablesValues());
-            Options.Update(themeValues);
+            Options themeOptions = Theme.FromId(themeId)?.Options;
+
+            Variables themeSettings = themeOptions?.Variables;
+            VariablesValues presetSettings = themeOptions?.Presets?.GetConstants(SelectedPresets.Get(themeId));
+            VariablesValues userSettings = UserSettings.Get(themeId);
+
+            VariablesValues variableValues = new VariablesValues(themeSettings).Merge(presetSettings).Merge(userSettings);
+            Options.Update(variableValues);
         }
 
         public void OptionsToTheme(string themeId)
@@ -226,15 +232,16 @@ namespace ThemeOptions.Models
 
         public void EndEdit()
         {
-            bool needRestart = SaveToSettings(CustomizableThemes, Settings);
+            bool needReload = SaveToSettings(CustomizableThemes, Settings);
             plugin.SavePluginSettings(Settings);
             Settings.ThemeToOptions(plugin.CurrentThemeId);
 
-            if (needRestart)
+            if (needReload)
             {
-                dynamic ctx = Application.Current.MainWindow.DataContext;
-                ctx.AppSettings.Fullscreen.OnPropertyChanged("Theme");
-                ctx.AppSettings.OnPropertyChanged("Theme");
+                plugin.LoadThemeOption();
+                //dynamic ctx = Application.Current.MainWindow.DataContext;
+                //ctx.AppSettings.Fullscreen.OnPropertyChanged("Theme");
+                //ctx.AppSettings.OnPropertyChanged("Theme");
             }
         }
 

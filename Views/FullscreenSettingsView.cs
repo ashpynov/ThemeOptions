@@ -83,9 +83,12 @@ namespace ThemeOptions.Views
             var assembly = Application.Current.GetType().Assembly;
             Type type = assembly.GetType("Playnite.FullscreenApp.Controls.SettingsSections.SettingsSectionControl");
             dynamic hostControl = Activator.CreateInstance(type);
-            using (var stream = new StreamReader(Path.Combine(PluginFolder, "Views\\FulscreenSettingsViewTemplate.xaml")))
+
+            Uri resourceUri = new Uri("pack://application:,,,/ThemeOptions;component/Views/FullscreenSettingsView.xaml");
+
+            using (Stream stream = Application.GetResourceStream(resourceUri).Stream)
             {
-                UserControl control = (UserControl)XamlReader.Load(stream.BaseStream);
+                UserControl control = (UserControl)XamlReader.Load(stream);
 
                 foreach (string style in new string[] {
                     "ThemeOptionsPreviewImageGridStyle",

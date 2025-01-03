@@ -15,13 +15,17 @@ namespace ThemeOptions.Models
         public VariablesValues() : base() {}
         public VariablesValues(IEnumerable<KeyValuePair<string, Variable>> pairs) : base()
         {
+            if (pairs == null) return;
+
             foreach(var p in pairs)
             {
-                this[p.Key] = p.Value;
+                this[p.Key] = new VariableValue() { Type = p.Value.Type, Value = p.Value.Value };
             }
         }
         public VariablesValues(IEnumerable<KeyValuePair<string, VariableValue>> pairs) : base()
         {
+            if (pairs == null) return;
+
             foreach(var p in pairs)
             {
                 this[p.Key] = p.Value;
@@ -30,6 +34,8 @@ namespace ThemeOptions.Models
 
         public VariablesValues Merge(IEnumerable<KeyValuePair<string, VariableValue>> pairs)
         {
+            if (pairs == null) return this;
+
             foreach(var p in pairs)
             {
                 this[p.Key] = p.Value;
