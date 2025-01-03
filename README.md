@@ -45,6 +45,39 @@ Variables may be 'Two way' bind and actual values will be save on Playnite exit.
 
 And also generated resource during fullscreen editing reloads right after Theme Option settings are closed.
 
+In case If some theme variables or resources are used as StaticResource thus it can not be updated in runtime - such variables (and preset options) may be marked as 'NeedRestart':
+
+```yaml
+Presets:
+    Interface:
+        Name: Interface Style
+        LocKey: LOCInterfaceStyle
+        Presets:
+            Default:
+                Name: Default
+                LocKey: LOCDefault
+                Preview: Themes Option\2.Interface\Preview\1-Default.png
+            Ambiance:
+                Name: Ambiance
+                NeedRestart: True
+                LocKey: LOCAmbiance
+                Preview: Themes Option\2.Interface\Preview\3-Ambiance.png
+                Files:
+                    - Themes Option\2.Interface\ConstantsAmbiance.xaml
+```
+or
+```yaml
+Variables:
+    AcceuilOrNot:
+        Title: Login screen
+        LocKey: LOCLoginScreen
+        Type: Boolean
+        Default: True
+        NeedRestart: True
+```
+This variables and preset options will be marked in settings interface by asterisks, and ask request restart is value was changed.
+
+
 ## Localization
 To support localization - no additional theme manifest required. Just add locales resources into Localization folder in your theme and it will be loaded automaticly (except of en_US - default theme version has to contain default language in native theme files. I recommend constants.xaml). Please refere to Playnite source code, or almost any (including this) extension code for localization resource samples.
 
