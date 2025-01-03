@@ -18,6 +18,9 @@ namespace ThemeOptions.Models
         public List<string> Files { get; set; }
         public VariablesValues Constants { get; set; }
 
+        [DontSerialize]
+        public bool NeedRestart { get; set; } = false;
+
 #pragma warning restore 0649
 
         [DontSerialize]

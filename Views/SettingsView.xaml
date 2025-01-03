@@ -134,6 +134,17 @@
                                 </CheckBox>
                             </DockPanel>
                         </DataTemplate>
+                        <DataTemplate x:Key="VISIBILITY_PanelTemplate">
+                                <DockPanel Margin="0,0,0,10" MinHeight="30" >
+                                    <CheckBox VerticalAlignment="Center"
+                                        IsChecked="{Binding Value, Converter={StaticResource VisibilityToBooleanConverter}}"
+                                        DockPanel.Dock="Left" Margin="0,0,0,0" >
+                                        <TextBlock Margin="10,0,0,0"
+                                            Style="{StaticResource BaseTextBlockStyle}"
+                                            Text="{Binding Title}" VerticalAlignment="Center"/>
+                                    </CheckBox>
+                                </DockPanel>
+                            </DataTemplate>
                         <DataTemplate x:Key="SLIDER_PanelTemplate">
                             <DockPanel LastChildFill="False" Margin="0,0,0,10" MinHeight="30">
                                 <TextBlock Text="{Binding Title}"

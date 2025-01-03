@@ -174,24 +174,5 @@ namespace Tests.Models
                     message: $"{v.Key} are not equal: expected ({expected[v.Key].Type}:{expected[v.Key].Value}),  actual:({actual[v.Key].Type}:{actual[v.Key].Value})" );
             }
         }
-
-        [TestMethod]
-        public void FromDynamicPropertiesUpdateOnlyTest()
-        {
-            var start = setupVariablesValues2();
-            var expected = setupVariablesValues2();
-            var dynSource = setupVariablesValuesCommon().Merge(setupVariablesValues2());
-            var dyn = dynSource.ToDynamicProperties();
-            var actual = start.FromDynamicProperties(dyn, updateOnly: true);
-
-            foreach (var v in actual)
-            {
-                Assert.AreEqual(
-                    expected[v.Key],
-                    actual[v.Key],
-                    comparer: new VariableValueComparer(),
-                    message: $"{v.Key} are not equal: expected ({expected[v.Key].Type}:{expected[v.Key].Value}),  actual:({actual[v.Key].Type}:{actual[v.Key].Value})" );
-            }
-        }
     }
 }

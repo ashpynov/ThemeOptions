@@ -212,7 +212,7 @@ namespace ThemeOptions.Models
             if (obj is SolidColorBrush b) return (b.Color.A == 255) ? $"#{b.Color.R:X2}{b.Color.G:X2}{b.Color.B:X2}" : b.Color.ToString();
             return obj.ToString();
         }
-        public VariablesValues FromDynamicProperties(DynamicProperties properties, bool updateOnly=false)
+        public VariablesValues FromDynamicProperties(DynamicProperties properties)
         {
             foreach (var v in properties)
             {
@@ -220,7 +220,7 @@ namespace ThemeOptions.Models
                 {
                     this[v.Key].Value = CastToValue(v.Value);
                 }
-                else if (!updateOnly)
+                else
                 {
                     Add(v.Key, new Variable() {
                          Type = v.Value.GetType().Name,

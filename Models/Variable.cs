@@ -93,5 +93,8 @@ namespace ThemeOptions.Models
 
         [DontSerialize]
         public Style DockPanelStyle { get => Style != null ? Application.Current.FindResource(Style) as Style : null ?? new Style(typeof(DockPanel)); }
+
+        [DontSerialize]
+        public bool NeedRestart { get; set; } = false;
     }
 }

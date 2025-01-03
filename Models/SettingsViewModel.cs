@@ -34,10 +34,13 @@ namespace ThemeOptions.Models
         [DontSerialize]
         public DynamicProperties Options { get; } = new DynamicProperties();
 
+        [DontSerialize]
         public MinimalVersion MinimalVersion { get; } = new MinimalVersion();
 
+        [DontSerialize]
         public string Version { get => MinimalVersion.PluginVersion; }
 
+        [DontSerialize]
         public bool IsInstalled { get => true; }
 
 
@@ -56,7 +59,7 @@ namespace ThemeOptions.Models
         public void OptionsToTheme(string themeId)
         {
             VariablesValues themeValues = UserSettings.Get(themeId, new VariablesValues());
-            UserSettings[themeId] = themeValues.FromDynamicProperties(Options, updateOnly: true);
+            UserSettings[themeId] = themeValues.FromDynamicProperties(Options);
         }
     }
 
@@ -162,6 +165,25 @@ namespace ThemeOptions.Models
             foreach (var theme in themes)
             {
                 theme.TranslateOptions();
+
+                foreach (var variable in theme?.Options?.Variables ?? new Variables())
+                {
+                    if (variable.Value.NeedRestart)
+                    {
+                        variable.Value.Title += " *";
+                    }
+                }
+
+                if (theme?.Options?.Presets?.Count > 0)
+                {
+                    theme.Options.Presets.Enumerate().ForEach(p => {
+                        if (p.Value.NeedRestart)
+                        {
+                            p.Value.Name += " *";
+                        }
+                    });
+                }
+
                 foreach (var preset in theme.PresetList)
                 {
                     preset.Selected = preset.OptionsList
@@ -210,8 +232,30 @@ namespace ThemeOptions.Models
 
             Settings updated = Serialization.GetClone(settings);
 
-            var presetsEqual = Serialization.AreObjectsEqual(original.SelectedPresets.Get(plugin.CurrentThemeId), updated.SelectedPresets.Get(plugin.CurrentThemeId));
-            var variablesEqual = Serialization.AreObjectsEqual(original.UserSettings.Get(plugin.CurrentThemeId), updated.UserSettings.Get(plugin.CurrentThemeId));
+            List<string> needsRestart = Theme.FromId(currentTheme)?.Options?.Variables
+                ?.Where(v=>v.Value.NeedRestart)
+                ?.Select(v => v.Key)
+                ?.ToList()
+                ?? new List<string>();
+
+            List<string> needsPresetsRestart = Theme.FromId(currentTheme)?.Options?.Presets
+                ?.SelectMany(p => p.Value.Presets.Where(sp => sp.Value.NeedRestart).Select(sp => $"{p.Key}.{sp.Key}"))
+                ?.ToList();
+
+            var originalPreset = original.SelectedPresets.Get(plugin.CurrentThemeId);
+            var updatedPreset = updated.SelectedPresets.Get(plugin.CurrentThemeId);
+
+            var presetsEqual = Serialization.AreObjectsEqual(
+                originalPreset.Where(p => needsPresetsRestart.Contains(p)),
+                updatedPreset.Where(p => needsPresetsRestart.Contains(p))
+            );
+
+
+            var variablesEqual = Serialization.AreObjectsEqual(
+                original.UserSettings.Get(plugin.CurrentThemeId).Where(v => needsRestart.Contains(v.Key)),
+                updated.UserSettings.Get(plugin.CurrentThemeId).Where(v => needsRestart.Contains(v.Key))
+            );
+
             return  !presetsEqual || !variablesEqual;
        }
 
@@ -243,10 +287,14 @@ namespace ThemeOptions.Models
 
             if (needReload)
             {
+
+                dynamic ctx = Application.Current.MainWindow.DataContext;
+                ctx.AppSettings.Fullscreen.OnPropertyChanged("Theme");
+                ctx.AppSettings.OnPropertyChanged("Theme");
+            }
+            else
+            {
                 plugin.LoadThemeOption();
-                //dynamic ctx = Application.Current.MainWindow.DataContext;
-                //ctx.AppSettings.Fullscreen.OnPropertyChanged("Theme");
-                //ctx.AppSettings.OnPropertyChanged("Theme");
             }
         }
 
