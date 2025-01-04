@@ -5,8 +5,7 @@ using System.ComponentModel;
 
 using Playnite.SDK;
 using Playnite.SDK.Data;
-using System;
-using Playnite.SDK.Plugins;
+
 
 namespace ThemeOptions.Models
 {
@@ -225,6 +224,16 @@ namespace ThemeOptions.Models
                         theme.Options.Variables
                         .Where(v => v.Value.Value != v.Value.Default)
                     );
+
+                    List<string> defaultValues = original.UserSettings[theme.Id]
+                        .Where(v => !theme.Options.Variables.ContainsKey(v.Key) ||  v.Value.Value == theme.Options.Variables[v.Key]?.Default)
+                        .Select(v => v.Key)
+                        .ToList();
+
+                    foreach( var key in defaultValues)
+                    {
+                        original.UserSettings[theme.Id].Remove(key);
+                    }
                 }
             }
 
@@ -239,11 +248,23 @@ namespace ThemeOptions.Models
                 ?? new List<string>();
 
             List<string> needsPresetsRestart = Theme.FromId(currentTheme)?.Options?.Presets
-                ?.SelectMany(p => p.Value.Presets.Where(sp => sp.Value.NeedRestart).Select(sp => $"{p.Key}.{sp.Key}"))
+                ?.SelectMany(p => p.Value.Presets?.Where(sp => sp.Value.NeedRestart).Select(sp => $"{p.Key}.{sp.Key}"))
                 ?.ToList();
 
-            var originalPreset = original.SelectedPresets.Get(plugin.CurrentThemeId);
-            var updatedPreset = updated.SelectedPresets.Get(plugin.CurrentThemeId);
+            var originalNonDefaultPreset = original.SelectedPresets.Get(plugin.CurrentThemeId, new List<string>());
+
+            var originalPreset = Theme.FromId(currentTheme).PresetList
+                .Select(
+                    p => p.OptionsList.FirstOrDefault(o => originalNonDefaultPreset.Contains(o.Id))?.Id
+                    ?? p.OptionsList.FirstOrDefault(o => o.Id.ToLower().EndsWith("default"))?.Id)
+                .ToList();
+
+            var updatedNonDefaultPreset = updated.SelectedPresets.Get(plugin.CurrentThemeId, new List<string>());
+            var updatedPreset = Theme.FromId(currentTheme).PresetList
+                .Select(
+                    p => p.OptionsList.FirstOrDefault(o => updatedNonDefaultPreset.Contains(o.Id))?.Id
+                    ?? p.OptionsList.FirstOrDefault(o => o.Id.ToLower().EndsWith("default"))?.Id)
+                .ToList();
 
             var presetsEqual = Serialization.AreObjectsEqual(
                 originalPreset.Where(p => needsPresetsRestart.Contains(p)),
@@ -252,8 +273,8 @@ namespace ThemeOptions.Models
 
 
             var variablesEqual = Serialization.AreObjectsEqual(
-                original.UserSettings.Get(plugin.CurrentThemeId).Where(v => needsRestart.Contains(v.Key)),
-                updated.UserSettings.Get(plugin.CurrentThemeId).Where(v => needsRestart.Contains(v.Key))
+                original.UserSettings.Get(plugin.CurrentThemeId, new VariablesValues()).Where(v => needsRestart.Contains(v.Key)),
+                updated.UserSettings.Get(plugin.CurrentThemeId, new VariablesValues()).Where(v => needsRestart.Contains(v.Key))
             );
 
             return  !presetsEqual || !variablesEqual;

@@ -48,7 +48,8 @@ namespace ThemeOptions.Models
         public VariablesValues GetConstants(List<string> presets)
         {
             VariablesValues variables= new VariablesValues();
-            foreach (var p in presets)
+
+            foreach (var p in presets ?? new List<string>())
             {
                 GetItem(p.Trim(), (option) =>
                 {
