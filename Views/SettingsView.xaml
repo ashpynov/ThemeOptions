@@ -12,6 +12,7 @@
         <views:VariablePanelItemsDataTemplateSelector x:Key="VariableTemplateSelector"/>
         <con:DurationToDouble x:Key="DurationToDoubleConverter"/>
         <con:DurationToString x:Key="DurationToStringConverter"/>
+        <con:VisibilityToBooleanConverter x:Key="VisibilityToBooleanConverter" />
     </UserControl.Resources>
 
     <ScrollViewer Focusable="False">

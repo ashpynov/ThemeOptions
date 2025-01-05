@@ -58,7 +58,11 @@ namespace ThemeOptions.Models
         public void OptionsToTheme(string themeId)
         {
             VariablesValues themeValues = UserSettings.Get(themeId, new VariablesValues());
-            UserSettings[themeId] = themeValues.FromDynamicProperties(Options);
+            VariablesValues userSettings = themeValues.FromDynamicProperties(Options);
+            if (userSettings?.Count > 0)
+            {
+                UserSettings[themeId] = userSettings;
+            }
         }
     }
 
@@ -213,19 +217,29 @@ namespace ThemeOptions.Models
 
             foreach (var theme in themes)
             {
-                settings.SelectedPresets[theme.Id] = theme
+                var selectedPresets = theme
                     .PresetList
                     .Where(p => p.Selected != null && !p.Selected.Id.ToLower().EndsWith("default"))
                     .Select(p => p.Selected.Id).ToList();
 
+                if (selectedPresets?.Count > 0)
+                {
+                    settings.SelectedPresets[theme.Id] = selectedPresets;
+                }
+
                 if (theme.Options.Variables != null)
                 {
-                    settings.UserSettings[theme.Id] = new VariablesValues(
+                    var variables = new VariablesValues(
                         theme.Options.Variables
                         .Where(v => v.Value.Value != v.Value.Default)
                     );
 
-                    List<string> defaultValues = original.UserSettings[theme.Id]
+                    if (variables?.Count > 0)
+                    {
+                        settings.UserSettings[theme.Id] = variables;
+                    }
+
+                    List<string> defaultValues = original.UserSettings.Get(theme.Id, new VariablesValues())
                         .Where(v => !theme.Options.Variables.ContainsKey(v.Key) ||  v.Value.Value == theme.Options.Variables[v.Key]?.Default)
                         .Select(v => v.Key)
                         .ToList();
@@ -253,18 +267,20 @@ namespace ThemeOptions.Models
 
             var originalNonDefaultPreset = original.SelectedPresets.Get(plugin.CurrentThemeId, new List<string>());
 
-            var originalPreset = Theme.FromId(currentTheme).PresetList
-                .Select(
+            var originalPreset = Theme.FromId(currentTheme)
+                ?.PresetList
+                ?.Select(
                     p => p.OptionsList.FirstOrDefault(o => originalNonDefaultPreset.Contains(o.Id))?.Id
                     ?? p.OptionsList.FirstOrDefault(o => o.Id.ToLower().EndsWith("default"))?.Id)
-                .ToList();
+                ?.ToList() ?? new List<string>();
 
             var updatedNonDefaultPreset = updated.SelectedPresets.Get(plugin.CurrentThemeId, new List<string>());
-            var updatedPreset = Theme.FromId(currentTheme).PresetList
-                .Select(
+            var updatedPreset = Theme.FromId(currentTheme)
+                ?.PresetList
+                ?.Select(
                     p => p.OptionsList.FirstOrDefault(o => updatedNonDefaultPreset.Contains(o.Id))?.Id
                     ?? p.OptionsList.FirstOrDefault(o => o.Id.ToLower().EndsWith("default"))?.Id)
-                .ToList();
+                ?.ToList() ?? new List<string>();
 
             var presetsEqual = Serialization.AreObjectsEqual(
                 originalPreset.Where(p => needsPresetsRestart.Contains(p)),
