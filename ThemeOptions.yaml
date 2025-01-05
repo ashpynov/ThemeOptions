@@ -1,5 +1,13 @@
 AddonId: 'ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef'
 Packages:
+  - Version: 0.21
+    RequiredApiVersion: 6.11.0
+    ReleaseDate: 2024-01-05
+    PackageUrl: https://github.com/ashpynov/ThemeOptions/releases/download/v0.21/ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef_0_21.pext
+    Changelog:
+      - Installation check fix
+      - Fixed couple of crash scenarios on empty plugin settings
+      - Fixed crash in Desktop mode
   - Version: 0.19
     RequiredApiVersion: 6.11.0
     ReleaseDate: 2024-01-04
