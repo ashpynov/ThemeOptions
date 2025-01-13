@@ -20,6 +20,21 @@ namespace ThemeOptions.Controls
         private static readonly ILogger Logger = LogManager.GetLogger();
         private readonly bool suppressDefaults;
 
+        InputBindingCollection actualBindings;
+        public new InputBindingCollection InputBindings
+        {
+             set
+             {
+                if (value != actualBindings)
+                {
+                    (Parent as ContentControl).InputBindings.Clear();
+                    (Parent as ContentControl).InputBindings.AddRange(value);
+                    actualBindings = value;
+                    Logger.Debug("Binding is changed");
+                }
+             }
+        }
+
         static GamepadAltControl()
         {
             TagProperty.OverrideMetadata(typeof(GamepadAltControl), new FrameworkPropertyMetadata(-1, OnTagChanged));
@@ -51,6 +66,11 @@ namespace ThemeOptions.Controls
             if (d is GamepadAltControl gamepadAltControl)
             {
                 bool active = gamepadAltControl.Tag.ToString().Equals("True", StringComparison.OrdinalIgnoreCase);
+                if (gamepadAltControl.Tag is InputBindingCollection collection)
+                {
+                    active = true;
+                    gamepadAltControl.InputBindings = collection;
+                }
                 gamepadAltControl.controller.AltProcessing = active;
             }
         }
