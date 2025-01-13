@@ -230,7 +230,7 @@ namespace ThemeOptions.Models
                     .Where(p => p.Selected != null && !p.Selected.Id.ToLower().EndsWith("default"))
                     .Select(p => p.Selected.Id).ToList();
 
-                if (selectedPresets?.Count > 0)
+                if (theme.PresetList?.Count > 0)
                 {
                     settings.SelectedPresets[theme.Id] = selectedPresets;
                 }
