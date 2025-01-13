@@ -16,6 +16,7 @@ using ThemeOptions.Controls;
 using Playnite.SDK.Events;
 using System.Linq;
 using System.Windows.Documents;
+using ThemeOptions.Tools;
 
 
 namespace ThemeOptions
@@ -151,7 +152,7 @@ namespace ThemeOptions
             AddCustomElementSupport(new AddCustomElementSupportArgs
             {
                 SourceName = "ThemeOptions",
-                ElementList = new List<string> { "Command" }
+                ElementList = new List<string> { "Command", "GamepadAdd", "GamepadAlt" }
             });
         }
 
@@ -192,6 +193,10 @@ namespace ThemeOptions
             {
                 case "Command":
                     return new CommandControl();
+                case "GamepadAdd":
+                    return new GamepadAltControl(suppressDefaults: false);
+                case "GamepadAlt":
+                    return new GamepadAltControl(suppressDefaults: true);
                 default:
                     throw new ArgumentException($"Unrecognized controlType '{controlType}' for request '{args.Name}'");
             }

@@ -22,5 +22,4 @@ namespace ThemeOptions.Models
             set { }
         }
     }
-
 }

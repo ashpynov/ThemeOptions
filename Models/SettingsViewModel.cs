@@ -5,6 +5,7 @@ using System.ComponentModel;
 
 using Playnite.SDK;
 using Playnite.SDK.Data;
+using System.Windows.Controls;
 
 
 namespace ThemeOptions.Models
@@ -32,6 +33,9 @@ namespace ThemeOptions.Models
 
         [DontSerialize]
         public DynamicProperties Options { get; } = new DynamicProperties();
+
+        [DontSerialize]
+        public GamepadState GamepadState { get; } = new GamepadState();
 
         [DontSerialize]
         public MinimalVersion MinimalVersion { get; } = new MinimalVersion();
@@ -144,6 +148,10 @@ namespace ThemeOptions.Models
             Settings.Options.PropertyChanged += (o, e) =>
             {
                 Settings.OnPropertyChanged("Options");
+            };
+            Settings.GamepadState.PropertyChanged += (o, e) =>
+            {
+                Settings.OnPropertyChanged("ControllerState");
             };
         }
 

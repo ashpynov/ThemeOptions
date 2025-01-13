@@ -1,18 +1,17 @@
 using Playnite.SDK;
 using System;
 using System.Reflection;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using ThemeOptions.Tools;
 
 namespace ThemeOptions.Controls
 {
-
     public partial class CommandControl
     {
         /********************************************************************************************************
-          Coomand to Assign action on Gamepad longPress button
+          Command to Assign action on Gamepad longPress button
          ********************************************************
             @Name: Content.GameControllerHoldCommand
             @Parameter: Array of 2 Buttons to handle command on Short and Long press
@@ -41,90 +40,47 @@ namespace ThemeOptions.Controls
             <Grid.InputBindings>
 
         ********************************************************************************************************/
-
-
         public RelayCommand<object> GameControllerHoldCommand => new RelayCommand<object>(o =>
         {
             if (o is Button[] buttons && buttons.Length == 2 )
             {
-                Controller.LongPressCommand(buttons[0]?.Command, buttons[1]?.Command, buttons[0]?.CommandParameter, buttons[1]?.CommandParameter);
+                new Gamepad().LongPressCommand(buttons[0]?.Command, buttons[1]?.Command, buttons[0]?.CommandParameter, buttons[1]?.CommandParameter);
             }
         });
 
-        static class Controller
+        /********************************************************************************************************
+          Command to Assign action on Gamepad short press (on release) button
+          Action occurs only on short click (on release) button
+          it is required if you are going to use some button as 'modifier' on hold and  same time to keep ability
+          to use it also on short press
+          e.g. 'Options' button to open menu, but 'Options + View' as Switch to
+         ********************************************************
+            @Name: Content.GameControllerShortCommand
+            @Parameter: Command to be called on Short press or Button object as Command and CommandParameter holder
+
+            <Grid.Resources>
+                <p:BindingProxy x:Key="MAIN_Commands" Data="{Binding}" />
+                <p:BindingProxy x:Key="THEMEOPTIONS_Commands" Data="{Binding Content, ElementName=ThemeOptions_Command}" />
+            </Grid.Resources>
+            <Grid.InputBindings>
+                <pin:GameControllerInputBinding
+                    Button="Back"
+                    Command="{Binding Data.OpenMainMenuCommand, Source={StaticResource MAIN_Commands}}"
+                    CommandParameter="{Binding Data.TouchTag, Source={StaticResource THEMEOPTIONS_Commands}}" />
+                </pin:GameControllerInputBinding>
+            <Grid.InputBindings>
+
+        ********************************************************************************************************/
+        public RelayCommand<object> GameControllerAltCommand => new RelayCommand<object>(o =>
         {
-            static dynamic Controllers;
-            static Controller()
+            if (o is ICommand command )
             {
-                dynamic model = Application.Current.MainWindow.DataContext;
-                Controllers = model.App.GameController.Controllers;
+                new Gamepad().LongPressCommand(command, null, null, null);
             }
-            static int GetControllesStateHash()
+            else if (o is Button button)
             {
-                int combinedHash = 17;
-
-                try
-                {
-                    foreach (var controller in Controllers)
-                    {
-                        foreach (var kvp in controller.LastInputState)
-                        {
-                            int keyHash = kvp.Key.GetHashCode();
-                            int valueHash = kvp.Value.GetHashCode();
-                            unchecked // Allow arithmetic overflow, numbers will "wrap around"
-                            {
-                                combinedHash = combinedHash * 23 + keyHash;
-                                combinedHash = combinedHash * 23 + valueHash;
-                            }
-                        }
-                    }
-                }
-                catch { };
-
-                return combinedHash;
+                new Gamepad().LongPressCommand(button.Command, null, button.CommandParameter, null);
             }
-            public static void LongPressCommand(ICommand shortCommand, ICommand longCommand, object shortParameter, object longParameter)
-            {
-                var startState = GetControllesStateHash();
-                DateTime startTime = DateTime.Now;
-                System.Timers.Timer timer = new System.Timers.Timer(50)
-                {
-                    AutoReset = false,
-                    Enabled = true
-                };
-                timer.Elapsed += (sender, e) =>
-                {
-
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        if (startState != GetControllesStateHash())
-                        {
-                            timer.Stop();
-                            timer.Dispose();
-                            if (shortCommand?.CanExecute(shortParameter) == true)
-                            {
-                                shortCommand?.Execute(shortParameter);
-                            }
-                        }
-                        else if ((DateTime.Now - startTime).TotalMilliseconds > 500)
-                        {
-                            timer.Stop();
-                            timer.Dispose();
-                            if (longCommand?.CanExecute(longParameter) == true)
-                            {
-                                longCommand?.Execute(longParameter);
-                            }
-
-                        }
-                        else
-                        {
-                            timer.Start();
-                        }
-                    });
-                };
-                timer.Start();
-
-            }
-        }
+        });
     }
 }
