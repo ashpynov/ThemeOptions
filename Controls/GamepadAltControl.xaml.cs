@@ -15,7 +15,6 @@ namespace ThemeOptions.Controls
 {
     public partial class GamepadAltControl : PluginUserControl
     {
-        //private IInputElement _previousFocusedElement;
         public Gamepad controller;
 
         private static readonly ILogger Logger = LogManager.GetLogger();
@@ -34,6 +33,17 @@ namespace ThemeOptions.Controls
             this.suppressDefaults = suppressDefaults;
             controller.ButtonDown += OnButtonDown;
 
+            dynamic model = Application.Current.MainWindow.DataContext;
+            if (model != null && model.GetType().Name == "FullscreenAppViewModel")
+            {
+                (model.AppSettings.Fullscreen as INotifyPropertyChanged).PropertyChanged += (o, e) =>
+                {
+                    if (e.PropertyName == "EnableGameControllerSupport")
+                    {
+                        OnTagChanged(this, default);
+                    }
+                };
+            }
         }
 
         private static void OnTagChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

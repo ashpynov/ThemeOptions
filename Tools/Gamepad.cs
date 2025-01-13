@@ -140,6 +140,11 @@ namespace ThemeOptions.Tools
 
         public bool IsPressed(string buttonName)
         {
+            if (!EnableGameControllerSupport)
+            {
+                return false;
+            }
+
             try
             {
                 foreach (var controller in Controllers)
@@ -165,10 +170,17 @@ namespace ThemeOptions.Tools
         }
 
         public bool AltProcessing {
-            get { return Model != null ? !Model.App.GameController.StandardProcessingEnabled : false; }
-            set { if (Model != null) Model.App.GameController.StandardProcessingEnabled = !value; }
+            get { return EnableGameControllerSupport && !Model.App.GameController.StandardProcessingEnabled; }
+            set { if (Model != null) Model.App.GameController.StandardProcessingEnabled = !value && EnableGameControllerSupport; }
         }
 
+        public bool EnableGameControllerSupport
+        {
+            get
+            {
+                return Model != null && Model.AppSettings.Fullscreen.EnableGameControllerSupport;
+            }
+        }
         public void DefaultProcess(string button, bool pressed)
         {
             if (Model == null || InputManager.Current.PrimaryKeyboardDevice?.ActiveSource == null)
@@ -192,7 +204,7 @@ namespace ThemeOptions.Tools
 
                 var keyboard = MapPadToKeyboard.Invoke(Model.App.GameController, new object[] { controllerInput });
 
-                Model.App.GameController.StandardProcessingEnabled = true;
+                Model.App.GameController.StandardProcessingEnabled = EnableGameControllerSupport;
                 SimulateKeyInput.Invoke(Model.App.GameController, new object[] { keyboard, true });
                 Model.App.GameController.StandardProcessingEnabled = false;
             }

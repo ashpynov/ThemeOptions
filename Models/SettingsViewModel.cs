@@ -151,7 +151,7 @@ namespace ThemeOptions.Models
             };
             Settings.GamepadState.PropertyChanged += (o, e) =>
             {
-                Settings.OnPropertyChanged("ControllerState");
+                Settings.OnPropertyChanged(nameof(Settings.GamepadState));
             };
         }
 
