@@ -1,8 +1,15 @@
 AddonId: 'ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef'
 Packages:
+  - Version: 0.22
+    RequiredApiVersion: 6.11.0
+    ReleaseDate: 2025-01-15
+    PackageUrl: https://github.com/ashpynov/ThemeOptions/releases/download/v0.22/ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef_0_22.pext
+    Changelog:
+      - Changing layout from modified one back to default does not trigger restart, even if NeedRestart is defined (#10)
+      - Support of Advanced Game controler bindings and Game controller state
   - Version: 0.21
     RequiredApiVersion: 6.11.0
-    ReleaseDate: 2024-01-05
+    ReleaseDate: 2025-01-05
     PackageUrl: https://github.com/ashpynov/ThemeOptions/releases/download/v0.21/ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef_0_21.pext
     Changelog:
       - Installation check fix
@@ -10,14 +17,14 @@ Packages:
       - Fixed crash in Desktop mode
   - Version: 0.19
     RequiredApiVersion: 6.11.0
-    ReleaseDate: 2024-01-04
+    ReleaseDate: 2025-01-04
     PackageUrl: https://github.com/ashpynov/ThemeOptions/releases/download/v0.19/ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef_0_19.pext
     Changelog:
       - Added option to specify 'NeedRestart' variables or presets
       - MainMenu commands are proxied via 'Content.MainMenu.***Command'
   - Version: 0.18
     RequiredApiVersion: 6.11.0
-    ReleaseDate: 2024-01-03
+    ReleaseDate: 2025-01-03
     PackageUrl: https://github.com/ashpynov/ThemeOptions/releases/download/v0.18/ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef_0_18.pext
     Changelog:
       - New features for theme designers are implemented
