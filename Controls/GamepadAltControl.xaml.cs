@@ -1,14 +1,13 @@
 
 using System;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
+using System.Windows.Media;
 using Playnite.SDK;
 using Playnite.SDK.Controls;
-using ThemeOptions.Models;
 using ThemeOptions.Tools;
 
 namespace ThemeOptions.Controls
@@ -19,6 +18,7 @@ namespace ThemeOptions.Controls
 
         private static readonly ILogger Logger = LogManager.GetLogger();
         private readonly bool suppressDefaults;
+        private readonly bool global;
 
         InputBindingCollection actualBindings;
         public new InputBindingCollection InputBindings
@@ -40,12 +40,15 @@ namespace ThemeOptions.Controls
             TagProperty.OverrideMetadata(typeof(GamepadAltControl), new FrameworkPropertyMetadata(-1, OnTagChanged));
         }
 
-        public GamepadAltControl(bool suppressDefaults = false)
+        public GamepadAltControl(bool suppressDefaults = false, bool global = false)
         {
+            this.suppressDefaults = suppressDefaults;
+            this.global = global;
+
             ((IComponentConnector)this).InitializeComponent();
             DataContext = this;
             controller = new Gamepad();
-            this.suppressDefaults = suppressDefaults;
+
             controller.ButtonDown += OnButtonDown;
 
             dynamic model = Application.Current.MainWindow.DataContext;
@@ -61,9 +64,9 @@ namespace ThemeOptions.Controls
             }
         }
 
-        private static void OnTagChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnTagChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
-            if (d is GamepadAltControl gamepadAltControl)
+            if (dependencyObject is GamepadAltControl gamepadAltControl)
             {
                 bool active = gamepadAltControl.Tag.ToString().Equals("True", StringComparison.OrdinalIgnoreCase);
                 if (gamepadAltControl.Tag is InputBindingCollection collection)
@@ -71,7 +74,7 @@ namespace ThemeOptions.Controls
                     active = true;
                     gamepadAltControl.InputBindings = collection;
                 }
-                gamepadAltControl.controller.AltProcessing = active;
+                gamepadAltControl.controller.AltProcessing = active && (gamepadAltControl.global || IsParentFocused(gamepadAltControl));
             }
         }
 
@@ -101,6 +104,21 @@ namespace ThemeOptions.Controls
                     controller.DefaultProcess(buttonName, pressed: true);
                 }
             }
+        }
+
+
+        static bool IsParentFocused(DependencyObject current)
+        {
+            var parent = VisualTreeHelper.GetParent(current);
+            if (parent == null)
+            {
+                return false;
+            }
+            else if (parent is UIElement parentElement && parentElement.IsKeyboardFocusWithin)
+            {
+                return true;
+            }
+            return IsParentFocused(parent);
         }
     }
 }

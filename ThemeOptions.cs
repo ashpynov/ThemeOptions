@@ -152,7 +152,14 @@ namespace ThemeOptions
             AddCustomElementSupport(new AddCustomElementSupportArgs
             {
                 SourceName = "ThemeOptions",
-                ElementList = new List<string> { "Command", "GamepadAdd", "GamepadAlt" }
+                ElementList = new List<string>
+                {
+                    "Command",
+                    "GamepadAdd",
+                    "GamepadAlt",
+                    "GamepadAddGlobal",
+                    "GamepadAltGlobal"
+                }
             });
         }
 
@@ -197,6 +204,10 @@ namespace ThemeOptions
                     return new GamepadAltControl(suppressDefaults: false);
                 case "GamepadAlt":
                     return new GamepadAltControl(suppressDefaults: true);
+                case "GamepadAddGlobal":
+                    return new GamepadAltControl(suppressDefaults: false, global: true);
+                case "GamepadAltGlobal":
+                    return new GamepadAltControl(suppressDefaults: true, global: true);
                 default:
                     throw new ArgumentException($"Unrecognized controlType '{controlType}' for request '{args.Name}'");
             }
