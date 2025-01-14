@@ -33,7 +33,9 @@ namespace ThemeOptions.Models
         }
 
         public bool Start { get => IsPressed("Start"); }
+        public bool Menu { get => IsPressed("Start"); }
         public bool Back { get => IsPressed("Back"); }
+        public bool View { get => IsPressed("Back"); }
         public bool LeftStick { get => IsPressed("LeftStick"); }
         public bool RightStick { get => IsPressed("RightStick"); }
         public bool LeftShoulder { get => IsPressed("LeftShoulder"); }
@@ -57,6 +59,5 @@ namespace ThemeOptions.Models
         public bool RightStickRight { get => IsPressed("RightStickRight"); }
         public bool RightStickUp { get => IsPressed("RightStickUp"); }
         public bool RightStickDown { get => IsPressed("RightStickDown"); }
-
     }
 }
