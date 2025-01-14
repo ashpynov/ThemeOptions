@@ -149,10 +149,6 @@ namespace ThemeOptions.Models
             {
                 Settings.OnPropertyChanged("Options");
             };
-            Settings.GamepadState.PropertyChanged += (o, e) =>
-            {
-                Settings.OnPropertyChanged(nameof(Settings.GamepadState));
-            };
         }
 
 
