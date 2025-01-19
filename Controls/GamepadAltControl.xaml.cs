@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
+using System.Windows.Threading;
 using Playnite.SDK;
 using Playnite.SDK.Controls;
 using ThemeOptions.Tools;
@@ -58,23 +59,49 @@ namespace ThemeOptions.Controls
                 {
                     if (e.PropertyName == "EnableGameControllerSupport")
                     {
-                        OnTagChanged(this, default);
+                        UpdateAltProcessing();
                     }
                 };
+                (model.App as INotifyPropertyChanged).PropertyChanged += (o, e) =>
+                {
+                    if (e.PropertyName == "IsActive")
+                    {
+                        // Schedule the action to run after input processing
+                        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            UpdateAltProcessing();
+                        }), DispatcherPriority.DataBind);
+
+                    }
+                };
+                EventManager.RegisterClassHandler(
+                    typeof(UIElement),
+                    Keyboard.GotKeyboardFocusEvent,
+                        new KeyboardFocusChangedEventHandler((sender, args) =>
+                    {
+                        UpdateAltProcessing();
+                    })
+                );
+
             }
+        }
+
+        void UpdateAltProcessing()
+        {
+            bool active = Tag.ToString().Equals("True", StringComparison.OrdinalIgnoreCase);
+            if (Tag is InputBindingCollection collection)
+            {
+                active = true;
+                InputBindings = collection;
+            }
+            controller.AltProcessing = active && (global || IsParentFocused(this));
         }
 
         private static void OnTagChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
             if (dependencyObject is GamepadAltControl gamepadAltControl)
             {
-                bool active = gamepadAltControl.Tag.ToString().Equals("True", StringComparison.OrdinalIgnoreCase);
-                if (gamepadAltControl.Tag is InputBindingCollection collection)
-                {
-                    active = true;
-                    gamepadAltControl.InputBindings = collection;
-                }
-                gamepadAltControl.controller.AltProcessing = active && (gamepadAltControl.global || IsParentFocused(gamepadAltControl));
+                gamepadAltControl.UpdateAltProcessing();
             }
         }
 

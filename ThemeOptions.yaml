@@ -1,5 +1,11 @@
 AddonId: 'ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef'
 Packages:
+  - Version: 0.23
+    RequiredApiVersion: 6.11.0
+    ReleaseDate: 2025-01-19
+    PackageUrl: https://github.com/ashpynov/ThemeOptions/releases/download/v0.23/ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef_0_23.pext
+    Changelog:
+      - Fixed Alternative Gamepad binds on Playnite reactivation
   - Version: 0.22
     RequiredApiVersion: 6.11.0
     ReleaseDate: 2025-01-15
