@@ -1,5 +1,11 @@
 AddonId: 'ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef'
 Packages:
+  - Version: 0.24
+    RequiredApiVersion: 6.11.0
+    ReleaseDate: 2025-02-04
+    PackageUrl: https://github.com/ashpynov/ThemeOptions/releases/download/v0.24/ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef_0_24.pext
+    Changelog:
+      - Fixed Alternative Gamepad double press
   - Version: 0.23
     RequiredApiVersion: 6.11.0
     ReleaseDate: 2025-01-19

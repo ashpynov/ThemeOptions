@@ -1,6 +1,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -38,7 +39,7 @@ namespace ThemeOptions.Controls
 
         static GamepadAltControl()
         {
-            TagProperty.OverrideMetadata(typeof(GamepadAltControl), new FrameworkPropertyMetadata(-1, OnTagChanged));
+            TagProperty.OverrideMetadata(typeof(GamepadAltControl), new FrameworkPropertyMetadata(null, OnTagChanged));
         }
 
         public GamepadAltControl(bool suppressDefaults = false, bool global = false)
@@ -66,12 +67,7 @@ namespace ThemeOptions.Controls
                 {
                     if (e.PropertyName == "IsActive")
                     {
-                        // Schedule the action to run after input processing
-                        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                        {
-                            UpdateAltProcessing();
-                        }), DispatcherPriority.DataBind);
-
+                        UpdateAltProcessing();
                     }
                 };
                 EventManager.RegisterClassHandler(
@@ -86,7 +82,20 @@ namespace ThemeOptions.Controls
             }
         }
 
+        bool _scheduled = false;
         void UpdateAltProcessing()
+        {
+            if (!_scheduled)
+            {
+                _scheduled = true;
+                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    _scheduled = false;
+                    DoUpdateAltProcessing();
+                }), DispatcherPriority.DataBind);
+            }
+        }
+        void DoUpdateAltProcessing()
         {
             bool active = Tag.ToString().Equals("True", StringComparison.OrdinalIgnoreCase);
             if (Tag is InputBindingCollection collection)
