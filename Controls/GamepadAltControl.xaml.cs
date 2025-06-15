@@ -1,7 +1,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -10,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using Playnite.SDK;
 using Playnite.SDK.Controls;
+using Playnite.SDK.Events;
 using ThemeOptions.Tools;
 
 namespace ThemeOptions.Controls
@@ -51,7 +51,7 @@ namespace ThemeOptions.Controls
             DataContext = this;
             controller = new Gamepad();
 
-            controller.ButtonDown += OnButtonDown;
+            Gamepad.ButtonDown += OnButtonDown;
 
             dynamic model = Application.Current.MainWindow.DataContext;
             if (model != null && model.GetType().Name == "FullscreenAppViewModel")
@@ -114,7 +114,7 @@ namespace ThemeOptions.Controls
             }
         }
 
-        private void OnButtonDown(object o, string buttonName)
+        private void OnButtonDown(object o, ControllerInput button)
         {
             if (controller.AltProcessing)
             {
@@ -123,7 +123,7 @@ namespace ThemeOptions.Controls
                     if (binding.GetType().Name == "GameControllerInputBinding")
                     {
                         dynamic gamePadBinding = binding;
-                        if (gamePadBinding.Button.ToString().Equals(buttonName))
+                        if (gamePadBinding.Button.ToString().Equals(button.ToString()))
                         {
 
                             if (gamePadBinding.Command?.CanExecute(gamePadBinding.CommandParameter) == true)
@@ -137,7 +137,7 @@ namespace ThemeOptions.Controls
                 // button not found, default processing
                 if (!suppressDefaults)
                 {
-                    controller.DefaultProcess(buttonName, pressed: true);
+                    controller.DefaultProcess(button.ToString(), pressed: true);
                 }
             }
         }

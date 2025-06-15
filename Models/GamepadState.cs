@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Reflection;
-using Playnite.SDK.Data;
 using ThemeOptions.Tools;
 
 namespace ThemeOptions.Models
@@ -17,7 +13,7 @@ namespace ThemeOptions.Models
             if (_gamepad == null)
             {
                 _gamepad = new Gamepad();
-                _gamepad.ButtonChanged += (o, e) => OnPropertyChanged(e);
+                Gamepad.ButtonChanged += (o, e) => OnPropertyChanged(e.ToString());
             }
             return _gamepad.IsPressed(button);
         }

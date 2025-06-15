@@ -14,14 +14,12 @@ using ThemeOptions.Models;
 using ThemeOptions.Views;
 using ThemeOptions.Controls;
 using Playnite.SDK.Events;
-using System.Linq;
-using System.Windows.Documents;
 using ThemeOptions.Tools;
 
 
 namespace ThemeOptions
 {
-    public class ThemeOptions: GenericPlugin
+    public class ThemeOptions : GenericPlugin
     {
         private static readonly ILogger logger = LogManager.GetLogger();
 
@@ -30,45 +28,45 @@ namespace ThemeOptions
         public static IPlayniteAPI PlayniteAPI { get; private set; }
 
         public static SettingsViewModel Settings { get; set; }
-        public Views.SettingsView SettingsView {get; private set;}
+        public Views.SettingsView SettingsView { get; private set; }
 
         public string CurrentThemeId;
 
         public override Guid Id { get; } = Guid.Parse("904cbf3b-573f-48f8-9642-0a09d05c64ef");
         List<ResourceDictionary> themeResources = new List<ResourceDictionary>();
 
-        public ResourceDictionary LoadResource(string resourceFile, bool mandatory=true)
+        public ResourceDictionary LoadResource(string resourceFile, bool mandatory = true)
         {
-                if (File.Exists(resourceFile))
+            if (File.Exists(resourceFile))
+            {
+                try
                 {
-                    try
+                    using (var stream = new StreamReader(resourceFile))
                     {
-                        using (var stream = new StreamReader(resourceFile))
-                        {
-                            ResourceDictionary resource = (ResourceDictionary)XamlReader.Load(stream.BaseStream);
-                            resource.Source = new Uri(resourceFile, UriKind.Absolute);
-                            Application.Current.Resources.MergedDictionaries.Add(resource);
-                            return resource;
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        logger.Error($"Error: '{e.Message}' during loading resource {resourceFile} ");
+                        ResourceDictionary resource = (ResourceDictionary)XamlReader.Load(stream.BaseStream);
+                        resource.Source = new Uri(resourceFile, UriKind.Absolute);
+                        Application.Current.Resources.MergedDictionaries.Add(resource);
+                        return resource;
                     }
                 }
-                else if (mandatory)
+                catch (Exception e)
                 {
-                    logger.Error($"File not found {resourceFile}");
+                    logger.Error($"Error: '{e.Message}' during loading resource {resourceFile} ");
                 }
-                else
-                {
-                    logger.Info($"Optional file not found {resourceFile}");
-                }
-                return null;
+            }
+            else if (mandatory)
+            {
+                logger.Error($"File not found {resourceFile}");
+            }
+            else
+            {
+                logger.Info($"Optional file not found {resourceFile}");
+            }
+            return null;
         }
         public void LoadThemeOption()
         {
-            foreach( ResourceDictionary resource in themeResources)
+            foreach (ResourceDictionary resource in themeResources)
             {
                 Application.Current.Resources.MergedDictionaries.Remove(resource);
             }
@@ -87,7 +85,7 @@ namespace ThemeOptions
                     foreach (var presetResource in theme.Options.Presets.GetResourceFiles(selectedPresets))
                     {
                         logger.Info($"Loading resource {presetResource}");
-                        if( LoadResource(Path.Combine(theme.Path, presetResource)) is ResourceDictionary resource)
+                        if (LoadResource(Path.Combine(theme.Path, presetResource)) is ResourceDictionary resource)
                         {
                             themeResources.Add(resource);
                         }
@@ -217,6 +215,10 @@ namespace ThemeOptions
         {
             Settings.Settings.OptionsToTheme(CurrentThemeId);
             SavePluginSettings(Settings.Settings);
+        }
+        public override void OnControllerButtonStateChanged(OnControllerButtonStateChangedArgs args)
+        {
+            Gamepad.SetState(args);
         }
     }
 }

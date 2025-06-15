@@ -1,27 +1,47 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
+using Playnite.SDK.Events;
 
 namespace ThemeOptions.Tools
 {
     public class Gamepad
     {
-        dynamic Controllers;
         dynamic Model;
 
-        void OnButtonUp(object sender, dynamic e)
+        static Dictionary<ControllerInput, ControllerInputState> ControllerState = new Dictionary<ControllerInput, ControllerInputState>();
+        public static ControllerInputState GetState(ControllerInput button)
         {
-            ButtonUp?.Invoke(null, e?.Button.ToString());
-            ButtonChanged?.Invoke(null, e?.Button.ToString());
+            return ControllerState.ContainsKey(button) ? ControllerState[button] : ControllerInputState.Released;
         }
-        void OnButtonDown(object sender, dynamic e)
+
+        public static ControllerInput GetButton(string buttonName)
         {
-            ButtonDown?.Invoke(null, e?.Button.ToString());
-            ButtonChanged?.Invoke(null, e?.Button.ToString());
+            return Enum.TryParse(buttonName, ignoreCase: true, out ControllerInput button) ? button : ControllerInput.None;
+        }
+        public static ControllerInputState GetState(string buttonName)
+        {
+            ControllerInput button = GetButton(buttonName);
+            return ControllerState.ContainsKey(button)
+                    ? ControllerState[button] : ControllerInputState.Released;
+        }
+
+        public static void SetState(OnControllerButtonStateChangedArgs args)
+        {
+            ControllerState[args.Button] = args.State;
+            if (args.State == ControllerInputState.Released)
+            {
+                ButtonUp?.Invoke(null, args.Button);
+                ButtonChanged?.Invoke(null, args.Button);
+            }
+            else
+            {
+                ButtonDown?.Invoke(null, args.Button);
+                ButtonChanged?.Invoke(null, args.Button);
+            }
         }
 
         public Gamepad()
@@ -30,40 +50,23 @@ namespace ThemeOptions.Tools
             if (model != null && model.GetType().Name == "FullscreenAppViewModel")
             {
                 Model = model;
-                Controllers = model.App.GameController.Controllers;
-
-                var gameController = model.App.GameController;
-
-                DynamicEventHandler.AddEventHandler(gameController, "ButtonUp", this, nameof(OnButtonUp));
-                DynamicEventHandler.AddEventHandler(gameController, "ButtonDown", this, nameof(OnButtonDown));
             }
         }
 
-        public EventHandler<string> ButtonUp;
-        public EventHandler<string> ButtonDown;
-        public EventHandler<string> ButtonChanged;
+        static public EventHandler<ControllerInput> ButtonUp;
+        static public EventHandler<ControllerInput> ButtonDown;
+        static public EventHandler<ControllerInput> ButtonChanged;
 
         int GetControllesStateHash()
         {
             int combinedHash = 17;
-
-            try
+            foreach (ControllerInputState v in  ControllerState.Values)
             {
-                foreach (var controller in Controllers)
+                unchecked // Allow arithmetic overflow, numbers will "wrap around"
                 {
-                    foreach (var kvp in controller.LastInputState)
-                    {
-                        int keyHash = kvp.Key.GetHashCode();
-                        int valueHash = kvp.Value.GetHashCode();
-                        unchecked // Allow arithmetic overflow, numbers will "wrap around"
-                        {
-                            combinedHash = combinedHash * 23 + keyHash;
-                            combinedHash = combinedHash * 23 + valueHash;
-                        }
-                    }
+                    combinedHash = combinedHash * 23 + v.GetHashCode();
                 }
             }
-            catch { };
 
             return combinedHash;
         }
@@ -75,12 +78,12 @@ namespace ThemeOptions.Tools
             bool shortPress = false;
             bool cancelPress = false;
 
-            void onButtonUp(object sender, string e)
+            void onButtonUp(object sender, ControllerInput e)
             {
                 shortPress = true;
             }
 
-            void onButtonDown(object sender, string e)
+            void onButtonDown(object sender, ControllerInput e)
             {
                 cancelPress = true;
             }
@@ -140,33 +143,7 @@ namespace ThemeOptions.Tools
 
         public bool IsPressed(string buttonName)
         {
-            if (!EnableGameControllerSupport)
-            {
-                return false;
-            }
-
-            try
-            {
-                foreach (var controller in Controllers)
-                {
-                    foreach (var kvp in controller.LastInputState)
-                    {
-                        if (kvp.Key.ToString().Equals(buttonName, StringComparison.OrdinalIgnoreCase))
-                        {
-                            if (kvp.Value.ToString().Equals("Pressed", StringComparison.OrdinalIgnoreCase))
-                            {
-                                return true;
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            catch { }
-            return false;
+            return EnableGameControllerSupport && GetState(buttonName) == ControllerInputState.Pressed;
         }
 
         public bool AltProcessing {
@@ -181,7 +158,7 @@ namespace ThemeOptions.Tools
                 return Model != null && Model.AppSettings.Fullscreen.EnableGameControllerSupport;
             }
         }
-        public void DefaultProcess(string button, bool pressed)
+        public void DefaultProcess(string buttonName, bool pressed)
         {
             if (Model == null || InputManager.Current.PrimaryKeyboardDevice?.ActiveSource == null)
             {
@@ -190,8 +167,8 @@ namespace ThemeOptions.Tools
 
             Assembly assembly = Assembly.LoadFrom(Path.Combine( AppDomain.CurrentDomain.BaseDirectory, "playnite.dll"));;
             Type eventArgs = assembly.GetType("Playnite.Input.GameControllerInputEventArgs");
-            object inputState = Enum.Parse(assembly.GetType("Playnite.Input.ControllerInputState"), pressed ? "Pressed" : "Released");
-            object controllerInput = Enum.Parse(assembly.GetType("Playnite.Input.ControllerInput"), button);
+            ControllerInputState inputState = pressed ? ControllerInputState.Pressed : ControllerInputState.Released;
+            ControllerInput controllerInput = GetButton(buttonName);
 
             InputEventArgs args = Activator.CreateInstance( eventArgs, new object[] { Key.None, inputState, controllerInput }) as InputEventArgs;
 
