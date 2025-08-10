@@ -33,6 +33,9 @@ namespace ThemeOptions.Controls
             public RelayCommand RestartSystemCommand => new RelayCommand(() => FakeModel().RestartSystemCommand.Execute());
             public RelayCommand LockSystemCommand => new RelayCommand(() => FakeModel().LockSystemCommand.Execute());
             public RelayCommand LogoutUserCommand => new RelayCommand(() => FakeModel().LogoutUserCommand.Execute());
+            public RelayCommand OpenClientsCommand => new RelayCommand(() => FakeModel().OpenClientsCommand.Execute());
+            public RelayCommand OpenToolsCommand => new RelayCommand(() => FakeModel().OpenToolsCommand.Execute());
+            public RelayCommand OpenExtensionsCommand => new RelayCommand(() => FakeModel().OpenExtensionsCommand.Execute());
             public RelayCommand UpdateGamesCommand => new RelayCommand(() => FakeModel().UpdateGamesCommand.Execute());
             public RelayCommand CancelProgressCommand => new RelayCommand(() => FakeModel().CancelProgressCommand.Execute());
             public RelayCommand OpenHelpCommand => new RelayCommand(() => FakeModel().OpenHelpCommand.Execute());
