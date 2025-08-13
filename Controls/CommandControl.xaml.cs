@@ -17,6 +17,13 @@ namespace ThemeOptions.Controls
         {
             Application.Current.Deactivated += OnApplicationDeactivate;
             Application.Current.Activated += OnApplicationActivate;
+            if (ThemeOptions.PlayniteAPI.ApplicationInfo.Mode == ApplicationMode.Fullscreen)
+            {
+                ThemeOptions.PlayniteAPI.Dialogs.GetCurrentAppWindow().SizeChanged += (o, e) =>
+                {
+                    ThemeOptions.Settings.UpdateAspectRatio();
+                };
+            }
         }
 
         private void OnApplicationDeactivate(object sender, EventArgs e)

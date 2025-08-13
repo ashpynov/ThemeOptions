@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 using Playnite.SDK;
 using Playnite.SDK.Data;
-using System.Windows.Controls;
+using ThemeOptions.Tools;
 
 
 namespace ThemeOptions.Models
@@ -46,6 +46,22 @@ namespace ThemeOptions.Models
         [DontSerialize]
         public bool IsInstalled { get => true; }
 
+        [DontSerialize]
+        private string aspectRatio = "dsp169";
+
+        [DontSerialize]
+        public string AspectRatio
+        {
+            get => aspectRatio;
+            set
+            {
+                if (aspectRatio != value)
+                {
+                    aspectRatio = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public void ThemeToOptions(string themeId)
         {
@@ -107,6 +123,17 @@ namespace ThemeOptions.Models
             {
                 settings = value;
                 OnPropertyChanged();
+            }
+        }
+        public void UpdateAspectRatio()
+        {
+            if (plugin.PlayniteApi.Dialogs.GetCurrentAppWindow() is Window window
+                && !(window.Width is double.NaN)
+                && !(window.Height is double.NaN)
+                && window.Width != 0
+                && window.Height != 0)
+            {
+                Settings.AspectRatio = DisplayAspectRatio.GetAspectRatio(window.Width, window.Height );
             }
         }
         public List<string> ThemePresets(string themeId) => settings.SelectedPresets.Get(themeId, new List<string>());
