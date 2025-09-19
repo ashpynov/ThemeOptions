@@ -2,14 +2,16 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build debug",
+            "label": "build debug64",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
                 "${workspaceFolder}/ThemeOptions.csproj",
                 "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary;ForceNoAlign"
+                "/consoleloggerparameters:NoSummary;ForceNoAlign",
+                "-c",
+                "Debug64"
             ],
             "problemMatcher": "$msCompile",
             "group": {

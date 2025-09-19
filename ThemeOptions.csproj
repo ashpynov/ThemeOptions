@@ -4,10 +4,15 @@
         <TargetFramework>net4.6.2</TargetFramework>
         <UseWPF>true</UseWPF>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug64|AnyCPU'">
         <DefineConstants>DEBUG;NET462;TRACE</DefineConstants>
         <DebugType>portable</DebugType>
         <PlatformTarget>x64</PlatformTarget>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DefineConstants>DEBUG;NET462;TRACE</DefineConstants>
+        <DebugType>portable</DebugType>
+        <PlatformTarget>x86</PlatformTarget>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
         <DebugType>portable</DebugType>

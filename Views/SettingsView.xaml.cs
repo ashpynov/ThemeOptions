@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using System.Windows.Markup;
 
 namespace ThemeOptions.Views
 {
@@ -6,7 +7,7 @@ namespace ThemeOptions.Views
     {
         public SettingsView()
         {
-            InitializeComponent();
+            ((IComponentConnector)this).InitializeComponent();
         }
     }
 }
