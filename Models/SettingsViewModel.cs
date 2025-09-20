@@ -6,6 +6,7 @@ using System.ComponentModel;
 using Playnite.SDK;
 using Playnite.SDK.Data;
 using ThemeOptions.Tools;
+using System.Windows.Input;
 
 
 namespace ThemeOptions.Models
@@ -21,8 +22,23 @@ namespace ThemeOptions.Models
         }
     }
 
+    public class OpenWindowHelper
+    {
+        public ICommand this[string key]
+        {
+            get
+            {
+                return new RelayCommand(() => ThemeOptions.OpenWindow(key));
+            }
+        }
+    }
+
     public class Settings : ObservableObject
     {
+
+        [DontSerialize]
+        public OpenWindowHelper OpenWindow { get; } = new OpenWindowHelper();
+
         private ThemesSelectedPresets selectedPresets = new ThemesSelectedPresets();
 
         private ThemesSettings userSettings = new ThemesSettings();

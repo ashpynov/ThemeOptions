@@ -29,6 +29,7 @@ namespace ThemeOptions
 
         public static SettingsViewModel Settings { get; set; }
         public Views.SettingsView SettingsView { get; private set; }
+        public static Window CustomWindow { get; private set; }
 
         public string CurrentThemeId;
 
@@ -118,6 +119,54 @@ namespace ThemeOptions
                     }
                 }
             }
+        }
+
+        public static void OpenWindow(string styleName)
+        {
+            var parent = PlayniteAPI.Dialogs.GetCurrentAppWindow();
+            CustomWindow = PlayniteAPI.Dialogs.CreateWindow(new WindowCreationOptions
+            {
+                ShowMinimizeButton = false
+            });
+
+            CustomWindow.Height = parent.Height;
+            CustomWindow.Width = parent.Width;
+            CustomWindow.Title = "MoData";
+
+            string xamlString = $@"
+            <Viewbox Stretch=""Uniform"" 
+                     xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+                     xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""
+                     xmlns:pbeh=""clr-namespace:Playnite.Behaviors;assembly=Playnite"">
+                <Grid Width=""1920"" Height=""1080"">
+                    <ContentControl x:Name=""CustomWindow""
+                                    Focusable=""False""
+                                    Style=""{{DynamicResource {styleName}}}"" />
+                </Grid>
+            </Viewbox>";
+
+            // Parse the XAML string
+            var element = (FrameworkElement)XamlReader.Parse(xamlString);
+
+
+            CustomWindow.Content = element;
+
+            CustomWindow.DataContext = parent.DataContext;
+
+            CustomWindow.Owner = parent;
+            CustomWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+            CustomWindow.PreviewKeyDown += (s, e) =>
+            {
+                if (e.Key == System.Windows.Input.Key.Escape)
+                {
+                    CustomWindow.Close();
+                    CustomWindow = null;
+                    e.Handled = true;
+                }
+            };
+
+            CustomWindow.ShowDialog();
         }
 
         public ThemeOptions(IPlayniteAPI api) : base(api)
@@ -218,7 +267,16 @@ namespace ThemeOptions
         }
         public override void OnControllerButtonStateChanged(OnControllerButtonStateChangedArgs args)
         {
-            Gamepad.SetState(args);
+
+            if (CustomWindow != null && CustomWindow.IsVisible && args.Button == ControllerInput.B && args.State == ControllerInputState.Pressed)
+            {
+                CustomWindow.Close();
+                CustomWindow = null;
+            }
+            else
+            {
+                Gamepad.SetState(args);
+            }
         }
     }
 }
