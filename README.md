@@ -405,3 +405,68 @@ This styles will help you to organize items offsets
 
 Note: please be aware of TargetType value.
 
+## Opening Custom Windows
+
+To open a custom window using ThemeOptions you must first create a Style for a ContentControl with the window's template defined:
+
+```xml
+<Style x:Key="MyWindowStyle" TargetType="ContentControl">
+    <Setter Property="Template">
+        <Setter.Value>
+            <ControlTemplate TargetType="ContentControl">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Border
+                        Grid.Column="1"
+                        Width="200"
+                        Height="200"
+                        Margin="0"
+                        Padding="16"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        BorderThickness="1"
+                        CornerRadius="16">
+                        <TextBlock Foreground="White" Text="Hello World!" />
+                    </Border>
+                </Grid>
+            </ControlTemplate>
+        </Setter.Value>
+    </Setter>
+</Style>
+```
+
+Then to open this template as a window you can bind tot he `Command` attribute of a `ButtonEx` control using indexable syntax to specify the style you created:
+
+```xml
+<ButtonEx Command="{PluginSettings Plugin=ThemeOptions, Path=OpenWindow[MyWindowStyle]}">
+    <TextBlock Text="Open Window" />
+</ButtonEx>
+```
+
+### Closing Windows
+
+To close any custom window, press <kbd>Esc</kbd> on the keyboard or the <kbd>B</kbd> (or platform-equivalent) button on a controller. Movement and item selection within a window is the same.
+
+### Opening another window from within a window
+
+When a new window is opened, the old window is automatically closed so pressing <kbd>Esc</kbd>/<kbd>B</kbd> will always close the current window entirely.
+
+### Window Positioning
+
+The window's XAML looks like this: A 16:9 blank screen where the content is positioned inside a single Grid. Using alignment and sizing attributes, you can position and size your window to anchor to a particular side of the screen (or center) as well as size it.
+
+```xml
+<Viewbox Stretch="Uniform" 
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:pbeh="clr-namespace:Playnite.Behaviors;assembly=Playnite">
+    <Grid Width="1920" Height="1080">
+        <ContentControl x:Name="CustomWindow"
+                        Focusable="False"
+                        Style=""{DynamicResource <STYLE_INJECTED_HERE>}" />
+    </Grid>
+</Viewbox>
+```
