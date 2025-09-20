@@ -438,7 +438,7 @@ To open a custom window using ThemeOptions you must first create a Style for a C
 </Style>
 ```
 
-Then to open this template as a window you can bind tot he `Command` attribute of a `ButtonEx` control using indexable syntax to specify the style you created:
+Then to open this template as a window you can bind to the `Command` attribute of a `ButtonEx` control using indexable syntax to specify the style you created:
 
 ```xml
 <ButtonEx Command="{PluginSettings Plugin=ThemeOptions, Path=OpenWindow[MyWindowStyle]}">
