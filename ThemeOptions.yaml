@@ -1,5 +1,11 @@
 AddonId: 'ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef'
 Packages:
+  - Version: 0.28
+    RequiredApiVersion: 6.12.0
+    ReleaseDate: 2025-08-20
+    PackageUrl: https://github.com/ashpynov/ThemeOptions/releases/download/v0.28/ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef_0_28.pext
+    Changelog:
+      - Added custom window support by Jono #13
   - Version: 0.27
     RequiredApiVersion: 6.12.0
     ReleaseDate: 2025-08-13
