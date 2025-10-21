@@ -33,6 +33,8 @@ namespace ThemeOptions
 
         public string CurrentThemeId;
 
+        public Extensions MissingExtensions { get; private set; } = new Extensions();
+
         public override Guid Id { get; } = Guid.Parse("904cbf3b-573f-48f8-9642-0a09d05c64ef");
         List<ResourceDictionary> themeResources = new List<ResourceDictionary>();
 
@@ -93,6 +95,39 @@ namespace ThemeOptions
                     }
                 }
             }
+
+
+            var missingRequired = new List<string>();
+            var missingRecommended = new List<string>();
+
+            var installedExtensions = PlayniteAPI.Addons.Addons;
+            if (theme.Extensions?.Required?.Count > 0)
+            {
+                foreach (var ext in theme.Extensions.Required)
+                {
+                    if (!installedExtensions.Exists(a => a.Equals(ext, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        missingRequired.Add(ext);
+                    }
+                }
+            }
+
+            if(theme.Extensions?.Recommended?.Count > 0)
+            {
+                foreach (var ext in theme.Extensions.Recommended)
+                {
+                    if (!installedExtensions.Exists(a => a.Equals(ext, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        missingRecommended.Add(ext);
+                    }
+                }
+            }
+
+            MissingExtensions = new Extensions
+            {
+                Required = missingRequired,
+                Recommended = missingRecommended
+            };
 
             if (PlayniteAPI.ApplicationSettings.Language != "en_US")
             {
@@ -257,6 +292,51 @@ namespace ThemeOptions
                     return new GamepadAltControl(suppressDefaults: true, global: true);
                 default:
                     throw new ArgumentException($"Unrecognized controlType '{controlType}' for request '{args.Name}'");
+            }
+        }
+
+        public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
+        {
+            if (MissingExtensions.Required.Count > 0)
+            {
+                var result = PlayniteAPI.Dialogs.ShowMessage(
+                    $"You are missing {MissingExtensions.Required.Count} required extensions for this theme. Would you like to open their addon pages?",
+                    "Missing Extensions",
+                    MessageBoxButton.YesNo
+                );
+                if (result == MessageBoxResult.Yes)
+                {
+                    foreach (var ext in MissingExtensions.Required)
+                    {
+                        System.Diagnostics.Process.Start($"https://playnite.link/addons.html#{ext}");
+                    }
+                }
+            }  
+
+            if (MissingExtensions.Recommended.Count > 0)
+            {
+                PlayniteAPI.Notifications.Add(
+                    new NotificationMessage(
+                        "ThemeOptions-MissingExtensions",
+                        $"You are missing {MissingExtensions.Recommended.Count} recommended extensions for this theme.",
+                        NotificationType.Info,
+                        () =>
+                        {
+                            var result = PlayniteAPI.Dialogs.ShowMessage(
+                                $"You are missing {MissingExtensions.Recommended.Count} recommended extensions for this theme. Would you like to open their addon pages?",
+                                "Missing Extensions",
+                                MessageBoxButton.YesNo
+                            );
+                            if (result == MessageBoxResult.Yes)
+                            {
+                                foreach (var ext in MissingExtensions.Recommended)
+                                {
+                                    System.Diagnostics.Process.Start($"https://playnite.link/addons.html#{ext}");
+                                }
+                            }
+                        }
+                    )
+                );
             }
         }
 

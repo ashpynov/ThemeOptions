@@ -16,6 +16,8 @@ namespace ThemeOptions.Models
         public string Path { get; set; }
         public Options Options { get; set; }
 
+        public Extensions Extensions { get; set; }
+
         public List<Preset> PresetList { get => Options.Presets?.Values.ToList() ?? new List<Preset>(); }
         public List<Variable> VariablesList { get => Options.Variables?.Values.ToList() ?? new List<Variable>(); }
 
@@ -39,6 +41,7 @@ namespace ThemeOptions.Models
                 var theme = Serialization.FromYamlFile<Theme>(path);
                 theme.Path =  System.IO.Path.GetDirectoryName(path);
                 theme.Options = Options.FromFile(System.IO.Path.Combine(theme.Path, "options.yaml"));
+                theme.Extensions = Extensions.FromFile(System.IO.Path.Combine(theme.Path, "extensions.yaml"));
                 return theme;
             }
             catch (Exception e)
