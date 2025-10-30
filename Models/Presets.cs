@@ -17,7 +17,7 @@ namespace ThemeOptions.Models
             Preset option = null;
             foreach (var p in path.Split('.'))
             {
-                option = suboptions?[p];
+                option = suboptions?.Get(p);
                 suboptions = option?.Presets;
                 if (option == null || callback?.Invoke(option) == false)
                     break;

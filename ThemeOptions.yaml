@@ -1,5 +1,11 @@
 AddonId: 'ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef'
 Packages:
+  - Version: 0.30
+    RequiredApiVersion: 6.12.0
+    ReleaseDate: 2025-10-30
+    PackageUrl: https://github.com/ashpynov/ThemeOptions/releases/download/v0.30/ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef_0_30.pext
+    Changelog:
+      - Fixed crash if old preset is in config #15
   - Version: 0.29
     RequiredApiVersion: 6.12.0
     ReleaseDate: 2025-10-21
