@@ -40,6 +40,10 @@ namespace ThemeOptions.Views
                     return null;
                 }
             }
+            else if (element != null && item != null && item is Preset)
+            {
+                return element.FindResource("PRESET_PanelTemplate") as DataTemplate;
+            }
 
             return null;
         }

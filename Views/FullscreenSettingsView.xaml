@@ -63,180 +63,174 @@
     </UserControl.Resources>
 
     <Grid
-        HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,20,20,20"
+        HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="20,20,20,20"
 
     >
-        <ScrollViewer Style="{DynamicResource ThemeOptionsSettingsScrollViewerStyle}" Focusable="False">
-            <StackPanel HorizontalAlignment="Stretch"  >
-                <StackPanel x:Name="ThemeSelector"
-                    HorizontalAlignment="Stretch"
-                    Visibility="Collapsed"
-                >
-                    <DockPanel Margin="0,0,0,10" >
-                        <TextBlock DockPanel.Dock="Left"
-                            Margin="0,0,10,0"
-                            MinWidth="200"
-                            MaxWidth="200"
-                            Text="Choose theme to set options:"
-                            VerticalAlignment="Center"/>
+        <DockPanel HorizontalAlignment="Stretch"  VerticalAlignment="Top">
+            <StackPanel x:Name="ThemeSelector"
+                HorizontalAlignment="Stretch"
+                Visibility="Collapsed"
+            >
+                <DockPanel Margin="0,0,0,10" >
+                    <TextBlock DockPanel.Dock="Left"
+                        Margin="0,0,10,0"
+                        MinWidth="200"
+                        MaxWidth="200"
+                        Text="Choose theme to set options:"
+                        VerticalAlignment="Center"/>
 
-                        <pctrls:ComboBoxEx HorizontalAlignment="Stretch"
-                            x:Name="SelectedTheme"
-                            Style="{StaticResource SettingsSectionCombobox}"
-                            SelectedItem="{Binding SelectedTheme, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            ItemsSource="{Binding CustomizableThemes}"
-                            MinWidth="200"
-                            >
-                            <pctrls:ComboBoxEx.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Name}"/>
-                                </DataTemplate>
-                            </pctrls:ComboBoxEx.ItemTemplate>
-                        </pctrls:ComboBoxEx>
-                    </DockPanel >
-
-                </StackPanel>
-                <StackPanel x:Name="Presets"
-                    HorizontalAlignment="Stretch"
-                    Visibility="{Binding ElementName=SelectedTheme, Path=SelectedItem.PresetList, Converter={StaticResource ICollectionNullOrEmptyToVisibilityConverter}}">
-                    <pctrls:ItemsControlEx
-                        ItemsSource="{Binding ElementName=SelectedTheme, Path=SelectedItem.PresetList}"
-                        Focusable="False">
-                        <pctrls:ItemsControlEx.ItemTemplate>
+                    <pctrls:ComboBoxEx HorizontalAlignment="Stretch"
+                        x:Name="SelectedTheme"
+                        Style="{StaticResource SettingsSectionCombobox}"
+                        SelectedItem="{Binding SelectedTheme, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        ItemsSource="{Binding CustomizableThemes}"
+                        MinWidth="200"
+                        >
+                        <pctrls:ComboBoxEx.ItemTemplate>
                             <DataTemplate>
-                                <DockPanel LastChildFill="False">
-                                    <TextBlock DockPanel.Dock="Left"
-                                        Text="{Binding Name}"
-                                        Style="{StaticResource SettingsSectionText}" />
-                                    <pctrls:ComboBoxEx HorizontalAlignment="Stretch"
-                                        ItemsSource="{Binding OptionsList}"
-                                        SelectedValue="{Binding Selected}"
-                                        DockPanel.Dock="Right"
-                                        Style="{StaticResource SettingsSectionCombobox}"
-                                        >
-                                        <pctrls:ComboBoxEx.ItemTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding Name}" />
-                                            </DataTemplate>
-                                        </pctrls:ComboBoxEx.ItemTemplate>
-                                        <pctrls:ComboBoxEx.ItemContainerStyle>
-                                            <Style TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
-                                                <Setter Property="local:Views.FocusHelper.IsFocused" Value = "{Binding RelativeSource={RelativeSource Self}, Path=IsFocused}" />
-                                            </Style>
-                                        </pctrls:ComboBoxEx.ItemContainerStyle>
-                                    </pctrls:ComboBoxEx>
-                                </DockPanel>
+                                <TextBlock Text="{Binding Name}"/>
                             </DataTemplate>
-                        </pctrls:ItemsControlEx.ItemTemplate>
-                    </pctrls:ItemsControlEx>
-                </StackPanel>
-                <StackPanel x:Name="Variables"
-                    HorizontalAlignment="Stretch" Margin="0,20,0,0"
-                    Visibility="{Binding ElementName=SelectedTheme, Path=SelectedItem.VariablesList, Converter={StaticResource ICollectionNullOrEmptyToVisibilityConverter}}"
-                    >
-                    <ItemsControl
-                        ItemsSource="{Binding ElementName=SelectedTheme, Path=SelectedItem.VariablesList}"
-                        Focusable="False"
-                        ItemTemplateSelector="{StaticResource VariableTemplateSelector}">
-                        <ItemsControl.Resources>
-                            <DataTemplate x:Key="HEADER_PanelTemplate">
-                                <DockPanel LastChildFill="False" Style="{Binding DockPanelStyle}">
-                                    <TextBlock Text="{Binding Title}"
-                                        Style="{Binding TextBlockStyle, TargetNullValue={StaticResource SettingsSectionText}}" />
-                                </DockPanel>
-                            </DataTemplate>
-                            <DataTemplate x:Key="STRING_PanelTemplate">
-                                <DockPanel LastChildFill="False" Style="{Binding DockPanelStyle}">
-                                    <TextBlock Text="{Binding Title}"
-                                        Style="{StaticResource SettingsSectionText}"
-                                        DockPanel.Dock="Left" />
-
-                                    <pctrls:ButtonEx
-                                        Style="{StaticResource SettingsSectionInputBoxStyle}"
-                                        DockPanel.Dock="Right"
-                                        Content="{Binding Value}"
-                                        ContentTemplate="{DynamicResource SettingsSectionInputBoxTemplate}"
-                                        HorizontalAlignment="Right"
-                                        Command="{x:Static views:Commands.TextInputCommand}"
-                                        CommandParameter="{Binding}"
-                                        >
-                                    </pctrls:ButtonEx>
-                                </DockPanel>
-                            </DataTemplate>
-                            <DataTemplate x:Key="BOOLEAN_PanelTemplate">
-                                <DockPanel LastChildFill="True" Style="{Binding DockPanelStyle}">
-                                    <pctrls:CheckBoxEx
-                                        Style="{StaticResource SettingsSectionCheckbox}"
-                                        Content="{Binding Title}"
-                                        VerticalAlignment="Center"
-                                        IsChecked="{Binding Value}"
-                                        DockPanel.Dock="Left" >
-                                    </pctrls:CheckBoxEx>
-                                </DockPanel>
-                            </DataTemplate>
-                            <DataTemplate x:Key="VISIBILITY_PanelTemplate">
-                                <DockPanel LastChildFill="True" Style="{Binding DockPanelStyle}">
-                                    <pctrls:CheckBoxEx
-                                        Style="{StaticResource SettingsSectionCheckbox}"
-                                        Content="{Binding Title}"
-                                        VerticalAlignment="Center"
-                                        IsChecked="{Binding Value, Converter={StaticResource VisibilityToBooleanConverter}}"
-                                        DockPanel.Dock="Left" >
-                                    </pctrls:CheckBoxEx>
-                                </DockPanel>
-                            </DataTemplate>
-                            <DataTemplate x:Key="SLIDER_PanelTemplate">
-                                <DockPanel LastChildFill="False" Style="{Binding DockPanelStyle}">
-                                    <TextBlock Text="{Binding Title}"
-                                               Style="{StaticResource SettingsSectionText}"/>
-
-                                    <pctrls:SliderEx
-                                                DockPanel.Dock="Right"
-                                                Style="{DynamicResource SettingsSectionSlider}"
-                                                Value="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
-                                                Minimum="{Binding Slider.Min}"
-                                                Maximum="{Binding Slider.Max}"
-                                                TickFrequency="{Binding Slider.SmallChange}"
-                                                SmallChange="{Binding Slider.SmallChange}"
-                                                LargeChange="{Binding Slider.LargeChange}"
-                                                IsSnapToTickEnabled="True"
-                                    />
-                                    <TextBlock
-                                                DockPanel.Dock="Right"
-                                                Text="{Binding Value}"
-                                                Margin="0,0,10,0"
-                                                Style="{StaticResource SettingsSectionText}"/>
-                                </DockPanel>
-                            </DataTemplate>
-                            <DataTemplate x:Key="DURATION_PanelTemplate">
-                                <DockPanel LastChildFill="False" Style="{Binding DockPanelStyle}">
-                                    <TextBlock Text="{Binding Title}"
-                                               Style="{StaticResource SettingsSectionText}"/>
-
-                                    <pctrls:SliderEx
-                                                DockPanel.Dock="Right"
-                                                Style="{DynamicResource SettingsSectionSlider}"
-                                                Value="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DurationToDoubleConverter}}"
-                                                Minimum="{Binding Slider.Min}"
-                                                Maximum="{Binding Slider.Max}"
-                                                TickFrequency="{Binding Slider.SmallChange}"
-                                                SmallChange="{Binding Slider.SmallChange}"
-                                                LargeChange="{Binding Slider.LargeChange}"
-                                                IsSnapToTickEnabled="True"
-                                    />
-                                    <TextBlock
-                                                DockPanel.Dock="Right"
-                                                Text="{Binding Value, Converter={StaticResource DurationToStringConverter}}"
-                                                Margin="0,0,10,0"
-                                                Style="{StaticResource SettingsSectionText}"/>
-                                </DockPanel>
-                            </DataTemplate>
-
-                        </ItemsControl.Resources>
-                    </ItemsControl>
-                </StackPanel>
+                        </pctrls:ComboBoxEx.ItemTemplate>
+                    </pctrls:ComboBoxEx>
+                </DockPanel >
             </StackPanel>
-        </ScrollViewer>
+            <pctrls:ItemsControlEx
+                ItemsSource="{Binding ElementName=SelectedTheme, Path=SelectedItem.SettingsList}"
+                Focusable="False"
+                ItemTemplateSelector="{StaticResource VariableTemplateSelector}">
+                <pctrls:ItemsControlEx.Resources>
+                    <DataTemplate x:Key="PRESET_PanelTemplate">
+                        <DockPanel LastChildFill="False" Style="{Binding DockPanelStyle}">
+                            <TextBlock DockPanel.Dock="Left"
+                                Text="{Binding Name}"
+                                Style="{StaticResource SettingsSectionText}" />
+                            <pctrls:ComboBoxEx HorizontalAlignment="Stretch"
+                                ItemsSource="{Binding OptionsList}"
+                                SelectedValue="{Binding Selected}"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource SettingsSectionCombobox}"
+                                >
+                                <pctrls:ComboBoxEx.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}" />
+                                    </DataTemplate>
+                                </pctrls:ComboBoxEx.ItemTemplate>
+                                <pctrls:ComboBoxEx.ItemContainerStyle>
+                                    <Style TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
+                                        <Setter Property="local:Views.FocusHelper.IsFocused" Value = "{Binding RelativeSource={RelativeSource Self}, Path=IsFocused}" />
+                                    </Style>
+                                </pctrls:ComboBoxEx.ItemContainerStyle>
+                            </pctrls:ComboBoxEx>
+                        </DockPanel>
+                    </DataTemplate>
+                    <DataTemplate x:Key="HEADER_PanelTemplate">
+                        <DockPanel LastChildFill="False" Style="{Binding DockPanelStyle}">
+                            <TextBlock Text="{Binding Title}"
+                                Style="{Binding TextBlockStyle, TargetNullValue={StaticResource SettingsSectionText}}" />
+                        </DockPanel>
+                    </DataTemplate>
+                    <DataTemplate x:Key="STRING_PanelTemplate">
+                        <DockPanel LastChildFill="False" Style="{Binding DockPanelStyle}">
+                            <TextBlock Text="{Binding Title}"
+                                Style="{StaticResource SettingsSectionText}"
+                                DockPanel.Dock="Left" />
+
+                            <pctrls:ButtonEx
+                                Style="{StaticResource SettingsSectionInputBoxStyle}"
+                                DockPanel.Dock="Right"
+                                Content="{Binding Value}"
+                                ContentTemplate="{DynamicResource SettingsSectionInputBoxTemplate}"
+                                HorizontalAlignment="Right"
+                                Command="{x:Static views:Commands.TextInputCommand}"
+                                CommandParameter="{Binding}"
+                                >
+                            </pctrls:ButtonEx>
+                        </DockPanel>
+                    </DataTemplate>
+                    <DataTemplate x:Key="BOOLEAN_PanelTemplate">
+                        <DockPanel LastChildFill="True" Style="{Binding DockPanelStyle}">
+                            <pctrls:CheckBoxEx
+                                Style="{StaticResource SettingsSectionCheckbox}"
+                                Content="{Binding Title}"
+                                VerticalAlignment="Center"
+                                IsChecked="{Binding Value}"
+                                DockPanel.Dock="Left" >
+                            </pctrls:CheckBoxEx>
+                        </DockPanel>
+                    </DataTemplate>
+                    <DataTemplate x:Key="VISIBILITY_PanelTemplate">
+                        <DockPanel LastChildFill="True" Style="{Binding DockPanelStyle}">
+                            <pctrls:CheckBoxEx
+                                Style="{StaticResource SettingsSectionCheckbox}"
+                                Content="{Binding Title}"
+                                VerticalAlignment="Center"
+                                IsChecked="{Binding Value, Converter={StaticResource VisibilityToBooleanConverter}}"
+                                DockPanel.Dock="Left" >
+                            </pctrls:CheckBoxEx>
+                        </DockPanel>
+                    </DataTemplate>
+                    <DataTemplate x:Key="SLIDER_PanelTemplate">
+                        <DockPanel LastChildFill="False" Style="{Binding DockPanelStyle}">
+                            <TextBlock Text="{Binding Title}"
+                                    Style="{StaticResource SettingsSectionText}"/>
+
+                            <pctrls:SliderEx
+                                        DockPanel.Dock="Right"
+                                        Style="{DynamicResource SettingsSectionSlider}"
+                                        Value="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+                                        Minimum="{Binding Slider.Min}"
+                                        Maximum="{Binding Slider.Max}"
+                                        TickFrequency="{Binding Slider.SmallChange}"
+                                        SmallChange="{Binding Slider.SmallChange}"
+                                        LargeChange="{Binding Slider.LargeChange}"
+                                        IsSnapToTickEnabled="True"
+                            />
+                            <TextBlock
+                                        DockPanel.Dock="Right"
+                                        Text="{Binding Value}"
+                                        Margin="0,0,10,0"
+                                        Style="{StaticResource SettingsSectionText}"/>
+                        </DockPanel>
+                    </DataTemplate>
+                    <DataTemplate x:Key="DURATION_PanelTemplate">
+                        <DockPanel LastChildFill="False" Style="{Binding DockPanelStyle}">
+                            <TextBlock Text="{Binding Title}"
+                                    Style="{StaticResource SettingsSectionText}"/>
+
+                            <pctrls:SliderEx
+                                        DockPanel.Dock="Right"
+                                        Style="{DynamicResource SettingsSectionSlider}"
+                                        Value="{Binding Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DurationToDoubleConverter}}"
+                                        Minimum="{Binding Slider.Min}"
+                                        Maximum="{Binding Slider.Max}"
+                                        TickFrequency="{Binding Slider.SmallChange}"
+                                        SmallChange="{Binding Slider.SmallChange}"
+                                        LargeChange="{Binding Slider.LargeChange}"
+                                        IsSnapToTickEnabled="True"
+                            />
+                            <TextBlock
+                                        DockPanel.Dock="Right"
+                                        Text="{Binding Value, Converter={StaticResource DurationToStringConverter}}"
+                                        Margin="0,0,10,0"
+                                        Style="{StaticResource SettingsSectionText}"/>
+                        </DockPanel>
+                    </DataTemplate>
+
+                </pctrls:ItemsControlEx.Resources>
+                <ItemsControl.Template>
+                    <ControlTemplate>
+                        <ScrollViewer
+                            Focusable="False"
+                            KeyboardNavigation.DirectionalNavigation="None"
+                            HorizontalScrollBarVisibility="Disabled"
+                            VerticalScrollBarVisibility="Auto"
+                            CanContentScroll="True">
+                            <ItemsPresenter />
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </ItemsControl.Template>
+            </pctrls:ItemsControlEx>
+        </DockPanel>
         <Grid Style="{DynamicResource ThemeOptionsPreviewImageGridStyle}" >
             <Image
                 Style="{DynamicResource ThemeOptionsPreviewImageStyle}"

@@ -20,6 +20,10 @@ namespace ThemeOptions.Models
 
         public List<Preset> PresetList { get => Options.Presets?.Values.ToList() ?? new List<Preset>(); }
         public List<Variable> VariablesList { get => Options.Variables?.Values.ToList() ?? new List<Variable>(); }
+        public IEnumerable<object> SettingsList
+        {
+            get => PresetList.Cast<object>().Concat(VariablesList.Cast<object>()).ToList();
+        }
 
         private static readonly ILogger logger = LogManager.GetLogger();
         public static Theme FromFile(string path)
