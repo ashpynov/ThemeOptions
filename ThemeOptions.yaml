@@ -1,5 +1,12 @@
 AddonId: 'ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef'
 Packages:
+  - Version: 0.31
+    RequiredApiVersion: 6.12.0
+    ReleaseDate: 2025-11-05
+    PackageUrl: https://github.com/ashpynov/ThemeOptions/releases/download/v0.31/ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef_0_31.pext
+    Changelog:
+      - Fixed Random crash on startup #17
+      - Fixed Scroll behavior issue with headers in ThemeOptions setings #18
   - Version: 0.30
     RequiredApiVersion: 6.12.0
     ReleaseDate: 2025-10-30
