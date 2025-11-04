@@ -97,7 +97,7 @@ namespace ThemeOptions.Controls
         }
         void DoUpdateAltProcessing()
         {
-            bool active = Tag.ToString().Equals("True", StringComparison.OrdinalIgnoreCase);
+            bool active = Tag?.ToString()?.Equals("True", StringComparison.OrdinalIgnoreCase) ?? false;
             if (Tag is InputBindingCollection collection)
             {
                 active = true;

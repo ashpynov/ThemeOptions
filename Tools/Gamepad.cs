@@ -146,9 +146,21 @@ namespace ThemeOptions.Tools
             return EnableGameControllerSupport && GetState(buttonName) == ControllerInputState.Pressed;
         }
 
-        public bool AltProcessing {
-            get { return EnableGameControllerSupport && !Model.App.GameController.StandardProcessingEnabled; }
-            set { if (Model != null) Model.App.GameController.StandardProcessingEnabled = !value && EnableGameControllerSupport; }
+        private bool altProcessing = false;
+        public bool AltProcessing
+        {
+            get
+            {
+                return EnableGameControllerSupport && altProcessing && !Model?.App?.GameController?.StandardProcessingEnabled;
+            }
+            set
+            {
+                if (Model != null)
+                {
+                    altProcessing = value;
+                    Model.App.GameController.StandardProcessingEnabled = !value && EnableGameControllerSupport;
+                }
+            }
         }
 
         public bool EnableGameControllerSupport

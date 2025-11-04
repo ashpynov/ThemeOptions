@@ -169,7 +169,7 @@ namespace ThemeOptions
             CustomWindow.Title = "MoData";
 
             string xamlString = $@"
-            <Viewbox Stretch=""Uniform"" 
+            <Viewbox Stretch=""Uniform""
                      xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
                      xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""
                      xmlns:pbeh=""clr-namespace:Playnite.Behaviors;assembly=Playnite"">
@@ -297,7 +297,7 @@ namespace ThemeOptions
 
         public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
         {
-            if (MissingExtensions.Required.Count > 0)
+            if (MissingExtensions?.Required?.Count > 0)
             {
                 var result = PlayniteAPI.Dialogs.ShowMessage(
                     $"You are missing {MissingExtensions.Required.Count} required extensions for this theme. Would you like to open their addon pages?",
@@ -311,9 +311,8 @@ namespace ThemeOptions
                         System.Diagnostics.Process.Start($"https://playnite.link/addons.html#{ext}");
                     }
                 }
-            }  
-
-            if (MissingExtensions.Recommended.Count > 0)
+            }
+            if (MissingExtensions?.Recommended?.Count > 0)
             {
                 PlayniteAPI.Notifications.Add(
                     new NotificationMessage(
