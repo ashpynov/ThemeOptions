@@ -94,13 +94,13 @@
                     </pctrls:ComboBoxEx>
                 </DockPanel >
             </StackPanel>
-            <pctrls:ItemsControlEx
+            <ItemsControl
                 ItemsSource="{Binding ElementName=SelectedTheme, Path=SelectedItem.SettingsList}"
                 Focusable="False"
                 ItemTemplateSelector="{StaticResource VariableTemplateSelector}">
-                <pctrls:ItemsControlEx.Resources>
+                <ItemsControl.Resources>
                     <DataTemplate x:Key="PRESET_PanelTemplate">
-                        <DockPanel LastChildFill="False" Style="{Binding DockPanelStyle}">
+                        <DockPanel LastChildFill="False">
                             <TextBlock DockPanel.Dock="Left"
                                 Text="{Binding Name}"
                                 Style="{StaticResource SettingsSectionText}" />
@@ -216,7 +216,7 @@
                         </DockPanel>
                     </DataTemplate>
 
-                </pctrls:ItemsControlEx.Resources>
+                </ItemsControl.Resources>
                 <ItemsControl.Template>
                     <ControlTemplate>
                         <ScrollViewer
@@ -229,7 +229,7 @@
                         </ScrollViewer>
                     </ControlTemplate>
                 </ItemsControl.Template>
-            </pctrls:ItemsControlEx>
+            </ItemsControl>
         </DockPanel>
         <Grid Style="{DynamicResource ThemeOptionsPreviewImageGridStyle}" >
             <Image

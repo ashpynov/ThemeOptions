@@ -1,5 +1,11 @@
 AddonId: 'ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef'
 Packages:
+  - Version: 0.32
+    RequiredApiVersion: 6.12.0
+    ReleaseDate: 2025-11-05
+    PackageUrl: https://github.com/ashpynov/ThemeOptions/releases/download/v0.32/ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef_0_32.pext
+    Changelog:
+      - Regression fix on slider field
   - Version: 0.31
     RequiredApiVersion: 6.12.0
     ReleaseDate: 2025-11-05
