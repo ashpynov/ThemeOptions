@@ -6,14 +6,14 @@ Module: ThemeOptions.dll
 Type: GenericPlugin
 Icon: icon.png
 Links:
-    - Name: Github
-      Url: https://github.com/ashpynov/ThemeOptions
+    - Name: Source code
+      Url: https://codeberg.org/ashpynov/ThemeOptions
     - Name: License
-      Url: https://github.com/ashpynov/ThemeOptions/LICENSE
+      Url: https://codeberg.org/ashpynov/ThemeOptions/LICENSE
     - Name: Support(Discord)
       Url: https://discord.com/channels/365863063296933888/808419165311467630
     - Name: Bug tracker
-      Url: https://github.com/ashpynov/ThemeOptions/issues
+      Url: https://codeberg.org/ashpynov/ThemeOptions/issues
     - Name: Ko-fi for Tips
       Url: https://ko-fi.com/ashpynov
     - Name: Boosty for Tips

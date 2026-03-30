@@ -1,5 +1,4 @@
 # Theme Options Extension for Playnite
-![DownloadCountTotal](https://img.shields.io/github/downloads/ashpynov/ThemeOptions/total?label=total%20downloads&style=plastic) ![DownloadCountLatest](https://img.shields.io/github/downloads/ashpynov/ThemeOptions/latest/total?style=plastic) ![LatestVersion](https://img.shields.io/github/v/tag/ashpynov/ThemeOptions?label=Latest%20version&style=plastic) ![License](https://img.shields.io/github/license/ashpynov/ThemeOptions?style=plastic)
 
 Theme Options is an extension for Playnite game manager and launcher to give ability to Theme designers to provide a wide range options configurable by User. Additionally it will add to Theme Localization support.
 
@@ -11,7 +10,7 @@ So theme may have:
 This Extension add theme configuration options menu in both - Desktop at usual extension configuration place, and in Fullscreen mode at Main menu -> Settings -> Theme Options.
 Please note: as soon as implementation of custom settings/menus in Fullscreen modes is not expected by Playnite developers - it use some non-PlayniteSDK way to integrate with Playnite application. So this functionality depends from Playnite version and may be affected by update. In this case it will remove Fullscreen Settings menu item, but don't worry - Desktop mode will allow you to configure your favorite fullscreen theme, why I will update integration code.
 
-[Latest Release](https://github.com/ashpynov/ThemeOptions/releases/latest)
+[Latest Release](https://codeberg.org/ashpynov/ThemeOptions/releases/latest)
 
 ## If you feel like supporting
 I do everything in my spare time for free, if you feel something aided you and you want to support me, you can always buy me a "koffie" as we say in dutch, no obligations whatsoever...
@@ -459,7 +458,7 @@ When a new window is opened, the old window is automatically closed so pressing 
 The window's XAML looks like this: A 16:9 blank screen where the content is positioned inside a single Grid. Using alignment and sizing attributes, you can position and size your window to anchor to a particular side of the screen (or center) as well as size it.
 
 ```xml
-<Viewbox Stretch="Uniform" 
+<Viewbox Stretch="Uniform"
             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             xmlns:pbeh="clr-namespace:Playnite.Behaviors;assembly=Playnite">
