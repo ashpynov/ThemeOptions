@@ -1,5 +1,12 @@
 AddonId: 'ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef'
 Packages:
+  - Version: 0.33
+    RequiredApiVersion: 6.12.0
+    ReleaseDate: 2026-05-16
+    PackageUrl: https://codeberg.org/ashpynov/ThemeOptions/releases/download/v0.33/ThemeOptions_904cbf3b-573f-48f8-9642-0a09d05c64ef_0_33.pext
+    Changelog:
+      - There is no username option available under any of the theme settings.
+Packages:
   - Version: 0.32
     RequiredApiVersion: 6.12.0
     ReleaseDate: 2025-11-05
