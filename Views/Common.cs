@@ -21,7 +21,7 @@ namespace ThemeOptions.Views
                 try
                 {
                     var variable = item as Variable;
-                    var type = variable.Type.ToUpper();
+                    var type = variable.Type.ToUpperInvariant();
                     if (new List<string>{ "DOUBLE", "INT32","CORNERRADIUS" }.Contains(type) && variable.Slider != null)
                     {
                         return element.FindResource("SLIDER_PanelTemplate") as DataTemplate;

@@ -6,3 +6,4 @@ Properties/launchSettings.json
 /.idea
 Tests/bin/
 Tests/obj/
+*.lscache
